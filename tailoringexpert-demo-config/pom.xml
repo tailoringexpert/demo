@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>TailoringExpert Demo</description>
+
+    <artifactId>tailoringexpert-demo-config</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>eu.tailoringexpert.demo</groupId>
+        <artifactId>tailoringexpert-demo-plattform</artifactId>
+        <version>0.0.5-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.tailoringexpert.demo</groupId>
+            <artifactId>tailoringexpert-demo-core</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>eu.tailoringexpert</groupId>
+            <artifactId>tailoringexpert-core</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>eu.tailoringexpert</groupId>
+            <artifactId>tailoringexpert-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>eu.tailoringexpert</groupId>
+            <artifactId>tailoringexpert-openhtmltopdf</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>eu.tailoringexpert</groupId>
+            <artifactId>tailoringexpert-poi</artifactId>
+        </dependency>
+    </dependencies>
+	
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/distribution.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
