@@ -57,6 +57,7 @@
         <module>tailoringexpert-demo-config</module>
         <module>tailoringexpert-demo-distribution</module>
         <module>tailoringexpert-demo-templates</module>
+        <module>tailoringexpert-demo-catalog</module>
         <module>tailoringexpert-demo-integrationtest</module>
     </modules>
 
@@ -127,6 +128,11 @@
             </dependency>
             <dependency>
                 <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-catalog</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
                 <artifactId>tailoringexpert-demo-integrationtest</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -151,6 +157,12 @@
             <dependency>
                 <groupId>eu.tailoringexpert</groupId>
                 <artifactId>tailoringexpert-tenant</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-db</artifactId>
                 <version>${tailoringexpert.version}</version>
             </dependency>
 
