@@ -82,6 +82,11 @@
             <groupId>eu.tailoringexpert</groupId>
             <artifactId>tailoringexpert-tenant</artifactId>
         </dependency>
+        <dependency>
+            <groupId>eu.tailoringexpert</groupId>
+            <artifactId>tailoringexpert-openhtmltopdf</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
