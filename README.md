@@ -33,6 +33,14 @@ Integrationtest to test demo implementations used by the plattform.
 
 Templates used for generating documents.
 
+### tailoringexpert-demo-assets
+
+Images and resources to use for output document creation
+
+### tailoringexpert-demo-www
+
+Static html like help, dataprotection and impressum 
+
 ## Limitations
 
 All tenant specific interfaces are implemented in a very simple way to fulfill plattform requirements.
