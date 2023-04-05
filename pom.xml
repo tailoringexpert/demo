@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>TailoringExpert Demo</description>
 
+    <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>eu.tailoringexpert</groupId>
@@ -14,153 +16,344 @@
         <version>0.0.5-SNAPSHOT</version>
     </parent>
 
+    <inceptionYear>2022</inceptionYear>
 
-    <dependencies>
-        <dependency>
-            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-bootapp</artifactId>
-        </dependency>
+    <organization>
+        <name>Michael Bädorf and others</name>
+        <url>https://www.tailoringexpert.eu</url>
+    </organization>
 
-        <dependency>
-            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-security</artifactId>
-        </dependency>
+    <developers>
+        <developer>
+            <name>Michael Baedorf</name>
+            <email>tailoringexpert@michael-baedorf.de</email>
+        </developer>
+    </developers>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-loader</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
-        <dependency>
-            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <scm>
+        <connection>scm:git:https://github.com/tailoringexpert/demo.git</connection>
+        <developerConnection>scm:git:https://github.com/tailoringexpert/demo.git</developerConnection>
+        <url>https://github.com/tailoringexpert/demo.git</url>
+        <tag>HEAD</tag>
+    </scm>
 
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>tailoringexpert-demo-core</module>
+        <module>tailoringexpert-demo-db</module>
+        <module>tailoringexpert-demo-config</module>
+        <module>tailoringexpert-demo-distribution</module>
+        <module>tailoringexpert-demo-catalog</module>
+        <module>tailoringexpert-demo-templates</module>
+        <module>tailoringexpert-demo-assets</module>
+        <module>tailoringexpert-demo-www</module>
+        <module>tailoringexpert-demo-integrationtest</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <license.licenseName>gpl_v3</license.licenseName>
+
+        <tailoringexpert-dependencies.version>0.0.5-SNAPSHOT</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.0.5-SNAPSHOT</tailoringexpert.version>
+
+        <jacoco.version>0.8.7</jacoco.version>
+        <junit-jupiter.version>5.9.2</junit-jupiter.version>
+
+        <lombok.version>1.18.26</lombok.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+
+        <!-- plugins -->
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.20.0</liquibase-maven-plugin.version>
+        <spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
+        <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
+
+        <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
+        <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <dependency-check-maven.version>8.2.1</dependency-check-maven.version>
+        <dependency-check-maven.phase>install</dependency-check-maven.phase>
+        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-licence-plugin.verision>2.0.0</maven-licence-plugin.verision>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+        <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
+        <maven-release-plugin.goal>install</maven-release-plugin.goal>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-distribution</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-templates</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-www</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-catalog</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert.demo</groupId>
+                <artifactId>tailoringexpert-demo-integrationtest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-core</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-data-jpa</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-db</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-tenant</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-db</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-db</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-openhtmltopdf</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-poi</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-tenant</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-bootapp</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-security</artifactId>
+                <version>${tailoringexpert.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.tailoringexpert</groupId>
+                <artifactId>tailoringexpert-dependencies</artifactId>
+                <version>${tailoringexpert-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok-mapstruct-binding</artifactId>
+                                <version>${lombok-mapstruct-binding.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>${liquibase-maven-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-maven-plugin</artifactId>
+                    <version>${lombok-maven-plugin.version}</version>
+                    <configuration>
+                        <addOutputDirectory>false</addOutputDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>delombok</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/assets.xml</descriptor>
-                        <descriptor>src/assembly/liquibase.xml</descriptor>
-                        <descriptor>src/assembly/templates.xml</descriptor>
-                        <descriptor>src/assembly/lib.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>zip</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
             </plugin>
             <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase-maven-plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit-jupiter.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <goals>${maven-release-plugin.goal}</goals>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${maven-exec-plugin.version}</version>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${maven-licence-plugin.verision}</version>
                 <configuration>
-                    <executable>mvn</executable>
+                    <dryRun>false</dryRun>
+                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                    <licenseName>gpl_v3</licenseName>
+                    <projectName>TailoringExpert</projectName>
+                    <excludedScopes>test,provided</excludedScopes>
+                    <excludedTypes>pom</excludedTypes>
+                    <includeOptional>false</includeOptional>
+                    <includeTransitiveDependencies>false</includeTransitiveDependencies>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>dropAll</id>
+                        <id>update-file-header</id>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>update-file-header</goal>
                         </goals>
+                        <phase>process-sources</phase>
                         <configuration>
-                            <arguments>
-                                <argument>liquibase:dropAll</argument>
-                                <argument>-Dliquibase.changeLogFile=db-tailoringexpert-plattform/db.changelog-install.xml</argument>
-                                <argument>-P ${db}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>update</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>liquibase:update</argument>
-                                <argument>-Dliquibase.changeLogFile=db-tailoringexpert-plattform/db.changelog-root.xml</argument>
-                                <argument>-P ${db}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>devupdate</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>liquibase:update</argument>
-                                <argument>-Dliquibase.changeLogFile=db-tailoringexpert-plattform/db.changelog-devupdate.xml
-                                </argument>
-                                <argument>-P ${db}</argument>
-                            </arguments>
+                            <roots>
+                                <root>src/main/java</root>
+                                <root>src/test/java</root>
+                            </roots>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
