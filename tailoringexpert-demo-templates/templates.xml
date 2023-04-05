@@ -11,12 +11,8 @@
 
     <fileSets>
         <fileSet>
+            <outputDirectory>/</outputDirectory>
             <directory>${basedir}/demo</directory>
-            <excludes>
-                <exclude>*.*</exclude>
-                <exclude>target/**</exclude>
-            </excludes>
         </fileSet>
-
     </fileSets>
 </assembly>
