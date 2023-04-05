@@ -7,7 +7,7 @@
     <description>TailoringExpert Demo</description>
 
     <groupId>eu.tailoringexpert.demo</groupId>
-    <artifactId>tailoringexpert-demo-plattform</artifactId>
+    <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
 
     <parent>
