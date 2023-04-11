@@ -175,11 +175,6 @@
 
             <dependency>
                 <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-db</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
                 <artifactId>tailoringexpert-openhtmltopdf</artifactId>
                 <version>${tailoringexpert.version}</version>
             </dependency>
