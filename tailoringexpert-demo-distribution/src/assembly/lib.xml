@@ -3,11 +3,11 @@
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 http://maven.apache.org/xsd/assembly-2.1.1.xsd">
 
     <id>lib</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
 
     <formats>
         <format>zip</format>
     </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
 
     <dependencySets>
         <dependencySet>
@@ -16,7 +16,6 @@
             <includes>
                 <include>${project.groupId}:tailoringexpert-demo-core</include>
                 <include>${project.groupId}:tailoringexpert-demo-config</include>
-<!--                <include>org.apache.pdfbox:pdfbox</include>-->
             </includes>
         </dependencySet>
     </dependencySets>

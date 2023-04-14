@@ -8,17 +8,6 @@
         <format>zip</format>
     </formats>
 
-    <fileSets>
-        <fileSet>
-            <directory>${basedir}/src/assembly/config</directory>
-            <outputDirectory>config</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/src/assembly/tenants</directory>
-            <outputDirectory>tenants</outputDirectory>
-        </fileSet>
-
-    </fileSets>
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
