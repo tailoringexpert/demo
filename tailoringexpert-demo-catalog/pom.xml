@@ -31,12 +31,12 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${output.dir}/${catalog.version}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/catalog</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/resources/${catalog.version}</directory>
+                                    <directory>src/main/resources/</directory>
                                     <includes>
-                                        <include>catalog.json</include>
+                                        <include>**/*.json</include>
                                     </includes>
                                     <filtering>true</filtering>
                                 </resource>
