@@ -24,10 +24,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-tenant</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
         </dependency>
