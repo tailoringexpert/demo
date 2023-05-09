@@ -54,7 +54,7 @@ import static java.util.Optional.ofNullable;
  *
  * @author Michael Bädorf
  */
-@Tenant("arsu")
+@Tenant("demo")
 @RequiredArgsConstructor
 public class DemoDocumentService implements DocumentService {
     @NonNull
