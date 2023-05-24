@@ -66,7 +66,7 @@
         <license.licenseName>gpl_v3</license.licenseName>
 
         <tailoringexpert-dependencies.version>0.0.5</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.0.5</tailoringexpert.version>
+        <tailoringexpert.version>0.0.6-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
