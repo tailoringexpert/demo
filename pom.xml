@@ -81,6 +81,7 @@
         <spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
 
+        <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -91,8 +92,6 @@
         <maven-licence-plugin.verision>2.0.1</maven-licence-plugin.verision>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
-        <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
-        <maven-release-plugin.goal>install</maven-release-plugin.goal>
     </properties>
 
     <dependencyManagement>
@@ -362,13 +361,22 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>${gitflow-maven-plugin.version}</version>
                 <configuration>
-                    <goals>${maven-release-plugin.goal}</goals>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <verbose>true</verbose>
+                    <featureSquash>true</featureSquash>
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                        <developmentBranch>develop</developmentBranch>
+                        <featureBranchPrefix>feature/</featureBranchPrefix>
+                        <releaseBranchPrefix>release/</releaseBranchPrefix>
+                        <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+                        <supportBranchPrefix>support/</supportBranchPrefix>
+                        <versionTagPrefix>v</versionTagPrefix>
+                        <origin>origin</origin>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
             <plugin>
