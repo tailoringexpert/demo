@@ -65,7 +65,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.0.5</tailoringexpert-dependencies.version>
+        <tailoringexpert-dependencies.version>0.0.6-SNAPSHOT</tailoringexpert-dependencies.version>
         <tailoringexpert.version>0.0.6-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
@@ -77,7 +77,7 @@
 
         <!-- plugins -->
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
-        <liquibase-maven-plugin.version>4.22.0</liquibase-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.20.0</liquibase-maven-plugin.version>
         <spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
 
@@ -156,18 +156,6 @@
 
             <dependency>
                 <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-tenant</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-db</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
                 <artifactId>tailoringexpert-openhtmltopdf</artifactId>
                 <version>${tailoringexpert.version}</version>
             </dependency>
@@ -214,12 +202,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
