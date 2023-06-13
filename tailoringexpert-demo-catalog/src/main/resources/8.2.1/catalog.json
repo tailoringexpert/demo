@@ -39820,7 +39820,7 @@
             } ],
             "phases" : [ "ZERO", "A", "B", "C", "D", "E", "F" ]
           }, {
-            "text" : "<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p><p><img border=\"0px\" src=\"${asset.server}/${asset.basepath}/${tenant}/${catalog.version}/catalog/cybersecurityawareness.png\" width=\"600px\"></p>",
+            "text" : "<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>",
             "position" : "c",
             "reference" : {
               "text" : "© Cyber Security Hub 2019",

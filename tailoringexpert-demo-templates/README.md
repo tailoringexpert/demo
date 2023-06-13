@@ -1,20 +1,7 @@
 # tailoringexpert-templates
 
-Dokumententamplates für die Erstellung der Tailoring Dokumente.
+Templates to use for creating demo documents.
 
-## Installation auf dem Zielsystem
+## Installation
 
-### Vorbereitung
-
-	cd $MANDANTEN_HOME/
-	mkdir -p arzs/templates
-	cd arzs/templates
-
-### git checkout
-
-	git init
-	git branch -m main
-	git remote add origin https://gitlab.dlr.de/arzs/tailoringexpert/templates.git
-	git pull origin main
-
-    git clone https://gitlab.dlr.de/arzs/tailoringexpert/templates.git .
+It is recommended to install templates by using the ansible-role-templates

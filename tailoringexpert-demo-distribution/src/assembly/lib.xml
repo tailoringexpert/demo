@@ -14,8 +14,8 @@
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <unpack>true</unpack>
             <includes>
-                <include>${project.groupId}:tailoringexpert-demo-core</include>
-                <include>${project.groupId}:tailoringexpert-demo-config</include>
+                <include>${project.groupId}:tailoringexpert-demo-core:zip:distribution</include>
+                <include>${project.groupId}:tailoringexpert-demo-config:zip:distribution</include>
             </includes>
         </dependencySet>
     </dependencySets>

@@ -6,11 +6,9 @@
     <title th:text="${titel}">Product Assurance, Safety &amp; Sustainability Requirements</title>
     <meta name="title" th:text="${titel}"/>
     <meta name="description" th:content="${beschreibung}"/>
-    <meta name="author" content="DLR AR-ZS"/>
-    <meta name="subject" content="Project Requirements"/>
-    <meta name="keywords" content="Requirements, DLR"/>
-
-
+    <meta name="author" content="demo tenant"/>
+    <meta name="subject" content="Tailoring Requirements"/>
+    <meta name="keywords" content="Requirements"/>
 
     <link rel="stylesheet" type="text/css" href="css/page.css"/>
 
@@ -32,15 +30,14 @@
             background-color: rgb(210, 233, 255);
         }
 
-	.na {
-	    font-style: italic;
-	    color: #D3D3D3;
-	    /* display: none; */
-	}
-}
-
-
+        .na {
+            font-style: italic;
+            color: #D3D3D3;
+            /* display: none; */
+        }
+    }
     </style>
+
     <bookmarks>
         <bookmark th:each="bookmark: ${bookmarks}" th:name="${bookmark.value}" th:href="'#' + ${bookmark.key}"/>
     </bookmarks>
@@ -53,14 +50,13 @@
 </div>
 
 <div style="position: running(logo)">
-    <img class="logo" src="css/img/dlr-logo.png" alt="DLR Logo" width="29px" height="24px"
-         style="position: absolute;top:10px;right: 0px;"/>
+    <img class="logo" src="css/img/logo.png" alt="demo Logo" width="29px" height="24px"/>
 </div>
 
 <header-box>
-    <h1>DLR<br/>Product Assurance</h1>
-    <h2>Space Agency</h2>
-</header-box>
+    <h1>demo<br/>Product Assurance</h1>
+    <h2>tailoringexpert</h2>
+</header-box>>
 
 
 <div style="position: running(dokumenttyp_projekt);font-size:x-small;border-top: 1px solid black">
@@ -140,7 +136,7 @@
                             <th style="width:21%">Due Date</th>
                             <th style="width:21%">PA-Req't.</th>
                             <th style="width:15%">DRD No</th>
-                            <th style="width:21%">DLR Action</th>
+                            <th style="width:21%">Action</th>
                         </tr>
                     </thead>
                 <tbody>
