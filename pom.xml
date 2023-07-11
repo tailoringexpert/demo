@@ -8,7 +8,7 @@
     <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.6-#19</version>
 
     <inceptionYear>2022</inceptionYear>
 
@@ -65,15 +65,15 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.0.5</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.0.5</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.0.6</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.0.6</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
-        <junit-jupiter.version>5.9.2</junit-jupiter.version>
+        <junit-jupiter.version>5.9.3</junit-jupiter.version>
 
-        <lombok.version>1.18.26</lombok.version>
+        <lombok.version>1.18.28</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
 
         <!-- plugins -->
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
@@ -81,6 +81,7 @@
         <spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
 
+        <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -88,11 +89,9 @@
         <dependency-check-maven.phase>install</dependency-check-maven.phase>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
-        <maven-licence-plugin.verision>2.0.0</maven-licence-plugin.verision>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
-        <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
-        <maven-release-plugin.goal>install</maven-release-plugin.goal>
+        <maven-licence-plugin.verision>2.2.0</maven-licence-plugin.verision>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -157,18 +156,6 @@
 
             <dependency>
                 <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-tenant</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-db</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
                 <artifactId>tailoringexpert-openhtmltopdf</artifactId>
                 <version>${tailoringexpert.version}</version>
             </dependency>
@@ -215,12 +202,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -362,13 +343,22 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>${gitflow-maven-plugin.version}</version>
                 <configuration>
-                    <goals>${maven-release-plugin.goal}</goals>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <verbose>true</verbose>
+                    <featureSquash>true</featureSquash>
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                        <developmentBranch>develop</developmentBranch>
+                        <featureBranchPrefix>feature/</featureBranchPrefix>
+                        <releaseBranchPrefix>release/</releaseBranchPrefix>
+                        <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+                        <supportBranchPrefix>support/</supportBranchPrefix>
+                        <versionTagPrefix>v</versionTagPrefix>
+                        <origin>origin</origin>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
             <plugin>
