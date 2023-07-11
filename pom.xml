@@ -65,8 +65,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.0.6-SNAPSHOT</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.0.6-SNAPSHOT</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.0.6</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.0.6</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
