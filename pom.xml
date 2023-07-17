@@ -45,6 +45,19 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>tailoringexpert-snapshots</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-snapshots.repository}</url>
+        </snapshotRepository>
+        <repository>
+            <id>tailoringexpert-releases</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-releases.repository}</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>tailoringexpert-demo-core</module>
         <module>tailoringexpert-demo-db</module>
@@ -65,8 +78,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.0.6</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.0.6</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.0.7-SNAPSHOT</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.0.7-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
