@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.openhtmltopdf.extend.FSDOMMutator;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.Chapter;
 import eu.tailoringexpert.domain.DRD;
@@ -39,6 +40,7 @@ import eu.tailoringexpert.domain.TailoringRequirement;
 import eu.tailoringexpert.renderer.PDFEngine;
 import eu.tailoringexpert.renderer.RendererRequestConfiguration;
 import eu.tailoringexpert.renderer.RendererRequestConfigurationSupplier;
+import eu.tailoringexpert.renderer.TailoringexpertDOMMutator;
 import eu.tailoringexpert.renderer.ThymeleafTemplateEngine;
 import eu.tailoringexpert.tailoring.CMPDFDocumentCreator;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -107,11 +109,12 @@ class CMPDFDocumentCreatorTest {
             .build();
 
         ThymeleafTemplateEngine templateEngine = new ThymeleafTemplateEngine(springTemplateEngine, supplier);
+        FSDOMMutator domMutator = new TailoringexpertDOMMutator();
 
         this.drdProviderMock = mock(BiFunction.class);
         this.creator = new CMPDFDocumentCreator(
             templateEngine,
-            new PDFEngine(supplier),
+            new PDFEngine(domMutator, supplier),
             drdProviderMock
         );
     }

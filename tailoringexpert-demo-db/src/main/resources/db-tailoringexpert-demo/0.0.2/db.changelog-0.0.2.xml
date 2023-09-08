@@ -7,6 +7,5 @@
 	<include file="db-tailoringexpert/0.0.2/db.changelog-0.0.2.xml" relativeToChangelogFile="false" />
 
 	<include file="db-tailoringexpert-demo/0.0.2/selectionvectorprofile.xml" />
-	<include file="db-tailoringexpert-demo/0.0.2/logo.xml" />
 
 </databaseChangeLog>

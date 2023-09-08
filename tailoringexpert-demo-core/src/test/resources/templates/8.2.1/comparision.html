@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8"/>
     <title th:text="${titel}">Requirements diffs automatic and manual tailoring</title>
-    <meta name="description" th:content="${beschreibung}" content="DRD Katalog für"/>
-    <meta name="author" content="DLR AR-ZS"/>
+    <meta name="description" th:content="${beschreibung}" content="Diff for"/>
+    <meta name="author" content="demo tenant"/>
     <meta name="subject" content="Diffs between automatic and manual tailoring"/>
 
-    <link rel="stylesheet" type="text/css"  href="css/page.css"/>
+    <link rel="stylesheet" type="text/css"  href="../css/page.css"/>
 
     <style>
         @page:first {
@@ -80,7 +80,7 @@
             NEIN
         </td>
         <td style="border-left:thin solid;;border-right:thin solid" th:text="${requirement.changed}?'JA':''"></td>
-        <td th:text="${requirement.changeDate}"></td>
+        <td th:text="${#temporals.format(requirement.changeDate, 'dd.MM.yyyy')}"></td>
     </tr>
     </tbody>
 

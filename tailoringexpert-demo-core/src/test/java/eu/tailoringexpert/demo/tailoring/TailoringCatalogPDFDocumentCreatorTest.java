@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.openhtmltopdf.extend.FSDOMMutator;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.DocumentSignature;
 import eu.tailoringexpert.domain.DocumentSignatureState;
@@ -37,6 +38,7 @@ import eu.tailoringexpert.renderer.HTMLTemplateEngine;
 import eu.tailoringexpert.renderer.PDFEngine;
 import eu.tailoringexpert.renderer.RendererRequestConfiguration;
 import eu.tailoringexpert.renderer.RendererRequestConfigurationSupplier;
+import eu.tailoringexpert.renderer.TailoringexpertDOMMutator;
 import eu.tailoringexpert.renderer.ThymeleafTemplateEngine;
 import eu.tailoringexpert.tailoring.DRDApplicablePredicate;
 import eu.tailoringexpert.tailoring.DRDProvider;
@@ -52,6 +54,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap.SimpleEntry;
@@ -66,52 +69,34 @@ import static eu.tailoringexpert.domain.Phase.D;
 import static eu.tailoringexpert.domain.Phase.E;
 import static eu.tailoringexpert.domain.Phase.F;
 import static eu.tailoringexpert.domain.Phase.ZERO;
+import static java.lang.String.format;
 import static java.nio.file.Files.newInputStream;
-import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.List.of;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
 
 @Log4j2
 class TailoringCatalogPDFDocumentCreatorTest {
 
-    static int mockServerPort = 1080;
-    static MockServerClient mockServer;
     String templateHome;
     String assetHome;
-    CatalogWebServerPortConsumer webServerPortConsumer;
     ObjectMapper objectMapper;
     FileSaver fileSaver;
 
     TailoringCatalogPDFDocumentCreator creator;
 
-    @BeforeAll
-    static void beforeAll() {
-        mockServer = startClientAndServer(mockServerPort);
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mockServer.close();
-    }
 
     @BeforeEach
     void setup() {
         Dotenv env = Dotenv.configure().ignoreIfMissing().load();
         this.templateHome = env.get("TEMPLATE_HOME", "src/test/resources/templates/");
-        this.assetHome = env.get("ASSET_HOME", "src/test/resources/assets/");
 
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModules(new ParameterNamesModule(), new JavaTimeModule(), new Jdk8Module());
         this.objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        this.webServerPortConsumer = new CatalogWebServerPortConsumer(mockServerPort);
 
         this.fileSaver = new FileSaver("target");
 
@@ -143,9 +128,10 @@ class TailoringCatalogPDFDocumentCreatorTest {
             new SimpleEntry<>(F, unmodifiableCollection(asList("EOM")))
         )));
 
+        FSDOMMutator domMutator = new TailoringexpertDOMMutator();
         this.creator = new TailoringCatalogPDFDocumentCreator(
             templateEngine,
-            new PDFEngine(supplier),
+            new PDFEngine(domMutator, supplier),
             drdProviderMock
         );
     }
@@ -159,7 +145,6 @@ class TailoringCatalogPDFDocumentCreatorTest {
             catalog = objectMapper.readValue(is, new TypeReference<Catalog<TailoringRequirement>>() {
             });
         }
-        webServerPortConsumer.accept(catalog);
 
         Collection<DocumentSignature> zeichnungen = of(
             DocumentSignature.builder()
@@ -183,18 +168,7 @@ class TailoringCatalogPDFDocumentCreatorTest {
         placeholders.put("DOKUMENT", "SAMPLE-RD-PS-1940/DV7");
         placeholders.put("SHOW_ALL", Boolean.TRUE.toString());
 
-        mockServer
-            .when(request()
-                .withMethod("GET")
-                .withPath("/assets/.*"))
-            .respond(httpRequest -> {
-                String asset = httpRequest.getPath().getValue().substring("/assets/demo".length());
-                java.io.File file = new java.io.File(this.assetHome + asset);
 
-                return response()
-                    .withStatusCode(200)
-                    .withBody(readAllBytes(file.toPath()));
-            });
         // act
         File actual = creator.createDocument("4711", tailoring, placeholders);
 
@@ -202,4 +176,17 @@ class TailoringCatalogPDFDocumentCreatorTest {
         assertThat(actual).isNotNull();
         fileSaver.accept("tailoringcatalog.pdf", actual.getData());
     }
+
+    @Test
+    void doit() throws Exception{
+        // arrange
+        String baseUri = new java.io.File(format("%s/%s/", templateHome, "/8.2.1/catalog" )).toURL().toExternalForm();
+        // act
+
+        URI actual = URI.create(baseUri);
+
+        // assert
+        log.debug(actual);
+    }
+
 }
