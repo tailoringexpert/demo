@@ -64,8 +64,6 @@
         <module>tailoringexpert-demo-config</module>
         <module>tailoringexpert-demo-distribution</module>
         <module>tailoringexpert-demo-catalog</module>
-        <module>tailoringexpert-demo-templates</module>
-        <module>tailoringexpert-demo-assets</module>
         <module>tailoringexpert-demo-www</module>
         <module>tailoringexpert-demo-integrationtest</module>
     </modules>

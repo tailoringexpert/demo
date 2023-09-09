@@ -1,4 +1,4 @@
-# tailoringexpert-demo-plattform
+# tailoringexpert-demo-platform
 
 Sample for tenant implementention of plattform interfaces.
 Also a run configuration for plattform using the demo tenant is provided
@@ -7,7 +7,7 @@ Also a run configuration for plattform using the demo tenant is provided
 
 ### tailoringexpert-demo-catalog
 
-Example catalog to use where url are replaced by running maven resource plugin.
+Example catalog (data), image resources and document generation templates.
 
 ### tailoringexpert-demo-config
 
@@ -29,22 +29,15 @@ Sample for packaging libraries to install libraries into plattform via maven ass
 
 Integrationtest to test demo implementations used by the plattform.
 
-### tailoringexpert-demo-templates
-
-Templates used for generating documents.
-
-### tailoringexpert-demo-assets
-
-Images and resources to use for output document creation
-
 ### tailoringexpert-demo-www
 
 Static html like help, dataprotection and impressum 
 
 ## Limitations
 
-All tenant specific interfaces are implemented in a very simple way to fulfill plattform requirements.
-Implementations are to be understand as _non productive_ examples!
+All tenant specific interfaces are implemented in a very simple way to fulfill 
+platform requirements. Implementations are to be understand as _non productive_ 
+examples!
 
 ## System-Plattform configuration
 

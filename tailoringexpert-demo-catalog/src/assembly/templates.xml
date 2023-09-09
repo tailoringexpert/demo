@@ -10,8 +10,11 @@
 
     <fileSets>
         <fileSet>
+            <directory>${basedir}/src/main/resources/demo</directory>
             <outputDirectory>/</outputDirectory>
-            <directory>${basedir}/demo</directory>
+            <excludes>
+                <exclude>**/*.json**</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 </assembly>
