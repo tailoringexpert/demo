@@ -41,8 +41,7 @@ public class DemoTailoringConfiguration {
         @NonNull @Qualifier("comparisionPDFDocumentCreator") DocumentCreator comparisionPDFDocumentCreator,
         @NonNull @Qualifier("drdPDFDocumentCreator") DocumentCreator drdPDFDocumentCreator,
         @NonNull @Qualifier("cmPDFDocumentCreator") DocumentCreator cmPDFDocumentCreator,
-        @NonNull @Qualifier("cmSpreadsheetDocumentCreator") DocumentCreator cmSpreadsheetDocumentCreator,
-        @NonNull @Qualifier("cmRequirementsSpreadsheetDocumentCreator") DocumentCreator cmRequirementsSpreadsheetDocumentCreator) {
+        @NonNull @Qualifier("cmSpreadsheetDocumentCreator") DocumentCreator cmSpreadsheetDocumentCreator) {
 
         return new DemoDocumentService(
             tailoringCatalogPDFDocumentCreator,
@@ -50,8 +49,7 @@ public class DemoTailoringConfiguration {
             comparisionPDFDocumentCreator,
             drdPDFDocumentCreator,
             cmPDFDocumentCreator,
-            cmSpreadsheetDocumentCreator,
-            cmRequirementsSpreadsheetDocumentCreator
+            cmSpreadsheetDocumentCreator
         );
     }
 }

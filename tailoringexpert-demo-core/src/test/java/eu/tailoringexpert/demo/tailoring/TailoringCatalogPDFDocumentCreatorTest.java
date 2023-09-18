@@ -45,11 +45,8 @@ import eu.tailoringexpert.tailoring.DRDProvider;
 import eu.tailoringexpert.tailoring.TailoringCatalogPDFDocumentCreator;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockserver.client.MockServerClient;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
@@ -77,6 +74,7 @@ import static java.util.Collections.unmodifiableCollection;
 import static java.util.List.of;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @Log4j2
 class TailoringCatalogPDFDocumentCreatorTest {
@@ -91,7 +89,7 @@ class TailoringCatalogPDFDocumentCreatorTest {
 
     @BeforeEach
     void setup() {
-        Dotenv env = Dotenv.configure().ignoreIfMissing().load();
+        Dotenv env = Dotenv.configure().systemProperties().ignoreIfMissing().load();
         this.templateHome = env.get("TEMPLATE_HOME", "src/test/resources/templates/");
 
         this.objectMapper = new ObjectMapper();
@@ -178,14 +176,15 @@ class TailoringCatalogPDFDocumentCreatorTest {
     }
 
     @Test
-    void doit() throws Exception{
+    void doit() throws Exception {
         // arrange
-        String baseUri = new java.io.File(format("%s/%s/", templateHome, "/8.2.1/catalog" )).toURL().toExternalForm();
+        String baseUri = new java.io.File(format("%s/%s/", templateHome, "/8.2.1/catalog")).toURL().toExternalForm();
         // act
 
         URI actual = URI.create(baseUri);
 
         // assert
+        assertThatNoException();
         log.debug(actual);
     }
 

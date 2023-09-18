@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DocumentSelectionVectorTest {
+class DocumentSelectionVectorTest {
 
     @Test
     void getName_InvalidKey_KeyReturned() {

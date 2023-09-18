@@ -75,9 +75,6 @@ public class DemoDocumentService implements DocumentService {
     @NonNull
     private DocumentCreator cmSpreadsheetDocumentCreator;
 
-    @NonNull
-    private DocumentCreator cmRequirementsSpreadsheetDocumentCreator;
-
     private static final String PARAMETER_PROJEKT = "PROJEKT";
 
     private static final String PARAMETER_DATUM = "DATUM";
@@ -192,7 +189,7 @@ public class DemoDocumentService implements DocumentService {
         placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
         placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
         placeholders.put(PARAMETER_DOKUMENT, docId);
-        placeholders.put("KATALOG_DOCID", catalogDocId);
+        placeholders.put(PARAMETER_KATALOG_DOCID, catalogDocId);
         placeholders.put("DRD_DOCID", drdDocId);
 
         File document = cmPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
@@ -216,39 +213,7 @@ public class DemoDocumentService implements DocumentService {
             tailoring.getIdentifier(),
             "CM");
 
-        Optional<File> result;
-        if (tailoring.getCatalog().getVersion().startsWith("EM")) {
-            result = createCMRequirementsSpreadsheetDocument(tailoring, docId, placeholders);
-        } else {
-            result = createCMSpreadsheetDocument(tailoring, docId, placeholders);
-        }
-
-        return result;
-    }
-
-    /**
-     * Create CM Excel document.
-     *
-     * @param tailoring tailoring to create CM document for
-     * @return created Excel File
-     */
-    Optional<File> createCMSpreadsheetDocument(Tailoring tailoring,
-                                               String docId,
-                                               Map<String, Object> placeholders) {
         File document = cmSpreadsheetDocumentCreator.createDocument(docId, tailoring, placeholders);
-        return ofNullable(document);
-    }
-
-    /**
-     * Create CM Excel document.
-     *
-     * @param tailoring tailoring to create CM document for
-     * @return created Excel File
-     */
-    Optional<File> createCMRequirementsSpreadsheetDocument(Tailoring tailoring,
-                                                           String docId,
-                                                           Map<String, Object> placeholders) {
-        File document = cmRequirementsSpreadsheetDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
     }
 
