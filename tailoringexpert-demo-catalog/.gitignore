@@ -78,5 +78,4 @@ atlassian-ide-plugin.xml
 **/.idea/shelf/*
 /src/site/arc42/.asciidoctor/
 /src/site/arc42/images/generated/
-/src/assembly/
 

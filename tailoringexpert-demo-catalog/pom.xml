@@ -11,7 +11,7 @@
     <parent>
         <groupId>eu.tailoringexpert.demo</groupId>
         <artifactId>tailoringexpert-demo</artifactId>
-        <version>0.0.6-#19</version>
+        <version>0.1.0</version>
     </parent>
 	
 	<properties>
@@ -44,7 +44,26 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/catalog.xml</descriptor>
+                        <descriptor>src/assembly/assets.xml</descriptor>
+                        <descriptor>src/assembly/templates.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

@@ -11,7 +11,7 @@
     <parent>
         <groupId>eu.tailoringexpert.demo</groupId>
         <artifactId>tailoringexpert-demo</artifactId>
-        <version>0.0.6-#19</version>
+        <version>0.1.0</version>
     </parent>
 
     <dependencies>
@@ -36,6 +36,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/lib.xml</descriptor>
@@ -44,10 +45,9 @@
                 <executions>
                     <execution>
                         <id>zip</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>single</goal>
-<!--                            <goal>directory</goal>-->
                         </goals>
                     </execution>
                 </executions>

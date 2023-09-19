@@ -57,8 +57,6 @@ class DemoDocumentServiceTest {
     DocumentCreator cmPDFDocumentCreatorMock;
     DocumentCreator drdPDFDocumentCreatorMock;
     DocumentCreator cmSpreadsheetDocumentCreatorMock;
-    DocumentCreator cmRequirementsSpreadsheetDocumentCreator;
-
     DemoDocumentService serviceSpy;
 
     @BeforeEach
@@ -69,7 +67,6 @@ class DemoDocumentServiceTest {
         this.drdPDFDocumentCreatorMock = mock(DocumentCreator.class);
         this.cmPDFDocumentCreatorMock = mock(DocumentCreator.class);
         this.cmSpreadsheetDocumentCreatorMock = mock(DocumentCreator.class);
-        this.cmRequirementsSpreadsheetDocumentCreator = mock(DocumentCreator.class);
 
         this.serviceSpy =
             spy(
@@ -79,8 +76,7 @@ class DemoDocumentServiceTest {
                     comparisonPDFDocumentCreatorMock,
                     drdPDFDocumentCreatorMock,
                     cmPDFDocumentCreatorMock,
-                    cmSpreadsheetDocumentCreatorMock,
-                    cmRequirementsSpreadsheetDocumentCreator)
+                    cmSpreadsheetDocumentCreatorMock)
             );
     }
 
@@ -249,6 +245,7 @@ class DemoDocumentServiceTest {
     void createCMDPDFDocument_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
+            .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
@@ -270,6 +267,7 @@ class DemoDocumentServiceTest {
     void createCMPDFDocument_MockCallReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
+            .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
@@ -299,29 +297,6 @@ class DemoDocumentServiceTest {
 
         // assert
         assertThat(actual).isInstanceOf(NullPointerException.class);
-        verify(cmRequirementsSpreadsheetDocumentCreator, times(0)).createDocument(any(), any(), any());
-    }
-
-    @Test
-    void createCMSpreadsheetDocument_RequirementBasedMockCallWithValidValues_FileReturned() {
-        // arrange
-        Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .catalog(Catalog.<TailoringRequirement>builder().version("EM-8.2.1").build())
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CM";
-        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
-
-        given(cmRequirementsSpreadsheetDocumentCreator.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
-
-        // act
-        Optional<File> actual = serviceSpy.createCMSpreadsheetDocument(tailoring, LocalDateTime.now());
-
-        // assert
-        assertThat(actual).isNotEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM");
     }
 
     @Test
@@ -336,28 +311,6 @@ class DemoDocumentServiceTest {
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmSpreadsheetDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
-
-        // act
-        Optional<File> actual = serviceSpy.createCMSpreadsheetDocument(tailoring, LocalDateTime.now());
-
-        // assert
-        assertThat(actual).isEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM");
-    }
-
-    @Test
-    void createCMSpreadsheetDocument_RequirementBasedMockCallReturnedNull_EmptyReturned() {
-        // arrange
-        Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .catalog(Catalog.<TailoringRequirement>builder().version("EM-8.2.1").build())
-            .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CM";
-        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
-
-        given(cmRequirementsSpreadsheetDocumentCreator.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
             .willReturn(null);
 
         // act

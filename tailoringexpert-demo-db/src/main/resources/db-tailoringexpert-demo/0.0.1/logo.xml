@@ -9,7 +9,7 @@
             <column name="LOGO_ID"
                     valueComputed=" ( select SEQ_COUNT from SEQUENCE where SEQ_NAME='SEQ_LOGO' )"/>
             <column name="NAME" value="ECSS"/>
-            <column name="URL" value="https://tailoring.michael-baedorf.de/assets/arzs/8.2.1/catalog/ecss.png"/>
+            <column name="URL" value="ecss.png"/>
         </insert>
         <update tableName="SEQUENCE">
             <column name="SEQ_COUNT" valueComputed="SEQ_COUNT+1"/>

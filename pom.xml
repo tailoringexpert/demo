@@ -8,7 +8,7 @@
     <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.6-#19</version>
+    <version>0.1.0</version>
 
     <inceptionYear>2022</inceptionYear>
 
@@ -45,14 +45,25 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>tailoringexpert-snapshots</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-snapshots.repository}</url>
+        </snapshotRepository>
+        <repository>
+            <id>tailoringexpert-releases</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-releases.repository}</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>tailoringexpert-demo-core</module>
         <module>tailoringexpert-demo-db</module>
         <module>tailoringexpert-demo-config</module>
         <module>tailoringexpert-demo-distribution</module>
         <module>tailoringexpert-demo-catalog</module>
-        <module>tailoringexpert-demo-templates</module>
-        <module>tailoringexpert-demo-assets</module>
         <module>tailoringexpert-demo-www</module>
         <module>tailoringexpert-demo-integrationtest</module>
     </modules>
@@ -65,8 +76,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.0.6</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.0.6</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.0</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.1.0</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
@@ -77,7 +88,7 @@
 
         <!-- plugins -->
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
-        <liquibase-maven-plugin.version>4.20.0</liquibase-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.23.1</liquibase-maven-plugin.version>
         <spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
 

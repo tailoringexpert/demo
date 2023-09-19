@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
-public class DemoScreeningSheetParameterProviderTest {
+class DemoScreeningSheetParameterProviderTest {
 
     private DemoScreeningSheetParameterProvider provider;
 
