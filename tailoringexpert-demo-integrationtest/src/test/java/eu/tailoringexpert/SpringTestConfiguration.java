@@ -25,14 +25,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.catalog.CatalogService;
 import eu.tailoringexpert.project.ProjectService;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetService;
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.Rollback;
+
+import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({
@@ -61,5 +65,14 @@ public class SpringTestConfiguration {
         @NonNull ObjectMapper objectMapper,
         @NonNull CatalogService catalogService) {
         return new BaseCatalogImport(objectMapper, catalogService);
+    }
+
+    @Bean
+    @DependsOn("liquibase")
+    SpringLiquibase liquibasePlatform(DataSource dataSource) {
+        SpringLiquibase result = new SpringLiquibase();
+        result.setDataSource(dataSource);
+        result.setChangeLog("classpath:db-tailoringexpert/db.changelog-root.xml");
+        return result;
     }
 }
