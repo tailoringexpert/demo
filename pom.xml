@@ -76,8 +76,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.1-SNAPSHOT</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.1.1-SNAPSHOT</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.1</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.1.1</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
@@ -102,6 +102,7 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <dependency-check-maven.version>8.4.2</dependency-check-maven.version>
         <dependency-check-maven.phase>install</dependency-check-maven.phase>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
         <maven-licence-plugin.verision>2.3.0</maven-licence-plugin.verision>
@@ -330,7 +331,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven-assembly-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
