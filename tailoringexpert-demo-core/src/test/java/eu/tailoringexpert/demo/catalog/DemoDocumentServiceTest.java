@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -86,9 +86,10 @@ class DemoDocumentServiceTest {
         Collection<File> actual = serviceSpy.createAll(catalog, LocalDateTime.now());
 
         // assert
-        assertThat(actual).isNotNull();
-        assertThat(actual).hasSize(2);
-        assertThat(actual).containsOnly(catalogFile, drdFile);
+        assertThat(actual)
+            .isNotNull()
+            .hasSize(2)
+            .containsOnly(catalogFile, drdFile);
 
         verify(catalogCreatorMock, times(1)).createDocument(anyString(), any(Catalog.class), any(Map.class));
         verify(drdCreatorMock, times(1)).createDocument(anyString(), any(Catalog.class), any(Map.class));

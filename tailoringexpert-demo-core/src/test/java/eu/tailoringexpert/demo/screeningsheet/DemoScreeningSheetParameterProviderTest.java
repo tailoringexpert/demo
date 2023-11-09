@@ -75,8 +75,9 @@ class DemoScreeningSheetParameterProviderTest {
         }
 
         // assert
-        assertThat(actual).isNotNull();
-        assertThat(actual).isEmpty();
+        assertThat(actual)
+            .isNotNull()
+            .isEmpty();
 
     }
 

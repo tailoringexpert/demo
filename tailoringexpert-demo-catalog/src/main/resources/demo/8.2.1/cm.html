@@ -56,7 +56,7 @@
 <header-box>
     <h1>demo<br/>Product Assurance</h1>
     <h2>tailoringexpert</h2>
-</header-box>>
+</header-box>
 
 <div style="position: running(dokumenttyp_projekt);font-size:x-small;border-top: 1px solid black">
     <span>Title: Product Assurance, Safety &amp; Sustainability Requirements</span><br/>
@@ -203,7 +203,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="chapter : ${chapters}" th:classappend="${chapter.level<3}?'chapterLevel' + ${chapter.level}">
+        <tr th:each="chapter : ${chapters}" th:if="${not chapter.requirement}" th:classappend="${chapter.level<3}?'chapterLevel' + ${chapter.level}">
             <td th:utext="${chapter.number}">Referenz</td>
             <td th:utext="${chapter.name}" th:attrappend="colspan=${chapter.level<3}?4">Position</td>
             <td th:if="${chapter.level}>2"></td>

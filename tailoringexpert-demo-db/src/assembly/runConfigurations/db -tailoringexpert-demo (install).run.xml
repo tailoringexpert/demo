@@ -11,7 +11,6 @@
           <option name="mavenHome" value="Bundled (Maven 3)" />
           <option name="nonRecursive" value="false" />
           <option name="outputLevel" value="INFO" />
-          <option name="pluginUpdatePolicy" value="DEFAULT" />
           <option name="printErrorStackTraces" value="false" />
           <option name="showDialogWithAdvancedSettings" value="false" />
           <option name="threads" />
@@ -24,6 +23,7 @@
       <option name="myRunnerSettings" />
       <option name="myRunnerParameters">
         <MavenRunnerParameters>
+          <option name="cmdOptions" />
           <option name="profiles">
             <set />
           </option>
@@ -31,7 +31,8 @@
             <list>
               <option value="-Ddependency-check-maven.phase=deploy" />
               <option value="-DskipTests" />
-              <option value="exec:exec@update" />
+              <option value="exec:exec@update-demo" />
+              <option value="exec:exec@update-platform" />
               <option value="-DskipTests" />
             </list>
           </option>
@@ -40,6 +41,9 @@
             <map>
               <entry key="tailoringexpert-demo.local" value="true" />
             </map>
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
           <option name="workingDirPath" value="$PROJECT_DIR$/../../git/tailoringexpert/demo/tailoringexpert-demo-db" />
