@@ -25,6 +25,7 @@ import eu.tailoringexpert.Tenant;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetParameterField;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetParameterProvider;
 import lombok.extern.log4j.Log4j2;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
@@ -46,27 +47,26 @@ public class DemoScreeningSheetParameterProvider implements ScreeningSheetParame
 
     @Override
     public Collection<ScreeningSheetParameterField> parse(InputStream is) {
-        final List<PDField> fields = new ArrayList<>();
-        try (PDDocument document = PDDocument.load(is)) {
+        Collection<ScreeningSheetParameterField> result = new ArrayList<>();
+        try (PDDocument document = Loader.loadPDF(is.readAllBytes())) {
+            List<PDField> fields = new ArrayList<>();
             fields.addAll(document.getDocumentCatalog().getAcroForm().getFields());
+
+            List<PDField> textfelder = filterByType(fields, PDField.class);
+            ALLGEMEIN.getParameter()
+                .stream()
+                .map(parameter -> mapField(textfelder, parameter))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(result::add);
+
+            List<PDCheckBox> selectedParameters = filterCheckedCheckboxes(fields);
+            of(PHASE)
+                .map(parameterType -> mapField(selectedParameters, parameterType))
+                .forEach(result::addAll);
         } catch (IOException e) {
             log.catching(e);
         }
-
-        Collection<ScreeningSheetParameterField> result = new ArrayList<>();
-
-        List<PDField> textfelder = filterByType(fields, PDField.class);
-        ALLGEMEIN.getParameter()
-            .stream()
-            .map(parameter -> mapField(textfelder, parameter))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .forEach(result::add);
-
-        List<PDField> selectedParameters = filterCheckedCheckboxes(fields);
-        of(PHASE)
-            .map(parameterType -> mapField(selectedParameters, parameterType))
-            .forEach(result::addAll);
 
         return result;
     }
@@ -79,17 +79,15 @@ public class DemoScreeningSheetParameterProvider implements ScreeningSheetParame
             .toList();
     }
 
-    private List<PDField> filterCheckedCheckboxes(List<PDField> fields) {
+    private List<PDCheckBox> filterCheckedCheckboxes(List<PDField> fields) {
         return filterByType(fields, PDCheckBox.class)
             .stream()
             .filter(PDCheckBox::isChecked)
-            .map(PDField.class::cast)
             .toList();
-
     }
 
-    private Collection<ScreeningSheetParameterField> mapField(
-        List<PDField> fields,
+    private <T extends PDField> Collection<ScreeningSheetParameterField> mapField(
+        List<T> fields,
         DemoScreeningSheetParameter parameter) {
         return fields.stream()
             .filter(field -> parameter.hasMember(field.getPartialName()))
@@ -101,8 +99,8 @@ public class DemoScreeningSheetParameterProvider implements ScreeningSheetParame
             .toList();
     }
 
-    private Optional<ScreeningSheetParameterField> mapField(
-        List<PDField> fields,
+    private <T extends PDField> Optional<ScreeningSheetParameterField> mapField(
+        List<T> fields,
         String name) {
         return fields.stream()
             .filter(field -> name.equals(field.getPartialName()))
