@@ -37,7 +37,7 @@ import static java.nio.file.Paths.get;
 import static java.util.Objects.nonNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PDFBOX5720Test {
+class PDFBOX5720Test {
 
     @Test
     void isChecked_EarlyAutoClose_WrongCheckedState() throws Exception {

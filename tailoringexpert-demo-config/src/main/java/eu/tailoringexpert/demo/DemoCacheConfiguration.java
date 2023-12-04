@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Log4j2
 @Configuration
-public class DemonCacheConfig {
+public class DemoCacheConfiguration {
 
     @Bean
     CacheManager demoCacheManager() {

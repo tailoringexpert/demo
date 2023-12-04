@@ -77,8 +77,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.2-SNAPSHOT</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.1.2-SNAPSHOT</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.2</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.1.2</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
@@ -377,14 +377,6 @@
                 <configuration>
                     <failOnError>false</failOnError>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>${dependency-check-maven.phase}</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>

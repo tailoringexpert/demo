@@ -14,7 +14,6 @@
             <unpack>false</unpack>
             <includes>
                 <include>${project.groupId}:${project.artifactId}</include>
-                <include>org.apache.pdfbox:pdfbox</include>
             </includes>
         </dependencySet>
     </dependencySets>
