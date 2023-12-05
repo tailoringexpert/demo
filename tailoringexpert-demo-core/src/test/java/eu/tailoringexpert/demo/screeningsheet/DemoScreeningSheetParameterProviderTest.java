@@ -22,7 +22,7 @@
 package eu.tailoringexpert.demo.screeningsheet;
 
 import eu.tailoringexpert.screeningsheet.ScreeningSheetParameterField;
-import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.Loader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -69,8 +69,8 @@ class DemoScreeningSheetParameterProviderTest {
 
         // act
         Collection<ScreeningSheetParameterField> actual;
-        try (MockedStatic<PDDocument> io = mockStatic(PDDocument.class)) {
-            io.when(() -> PDDocument.load(any(InputStream.class))).thenThrow(new IOException());
+        try (MockedStatic<Loader> io = mockStatic(Loader.class)) {
+            io.when(() -> Loader.loadPDF(any(byte[].class))).thenThrow(new IOException());
             actual = provider.parse(is);
         }
 

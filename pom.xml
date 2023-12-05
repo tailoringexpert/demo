@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -8,7 +9,7 @@
     <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 
     <inceptionYear>2022</inceptionYear>
 
@@ -76,11 +77,11 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.1</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.1.1</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.2</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.1.2</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
-        <junit-jupiter.version>5.9.3</junit-jupiter.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
 
         <lombok.version>1.18.30</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -92,15 +93,15 @@
 
         <!-- plugins -->
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-        <liquibase-maven-plugin.version>4.24.0</liquibase-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.25.0</liquibase-maven-plugin.version>
         <spring-boot-maven-plugin.version>3.1.5</spring-boot-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
 
         <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
-        <maven-exec-plugin.version>3.1.0</maven-exec-plugin.version>
+        <maven-exec-plugin.version>3.1.1</maven-exec-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <dependency-check-maven.version>8.4.2</dependency-check-maven.version>
+        <dependency-check-maven.version>9.0.2</dependency-check-maven.version>
         <dependency-check-maven.phase>install</dependency-check-maven.phase>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
@@ -376,14 +377,6 @@
                 <configuration>
                     <failOnError>false</failOnError>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>${dependency-check-maven.phase}</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>

@@ -72,7 +72,7 @@ public class SpringTestConfiguration {
     SpringLiquibase liquibasePlatform(DataSource dataSource) {
         SpringLiquibase result = new SpringLiquibase();
         result.setDataSource(dataSource);
-        result.setChangeLog("classpath:db-tailoringexpert/db.changelog-root.xml");
+        result.setChangeLog("classpath:db-tailoringexpert-demo/db.changelog-root.xml");
         return result;
     }
 }

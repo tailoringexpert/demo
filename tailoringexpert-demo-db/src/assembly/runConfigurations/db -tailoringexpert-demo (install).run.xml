@@ -31,8 +31,8 @@
             <list>
               <option value="-Ddependency-check-maven.phase=deploy" />
               <option value="-DskipTests" />
-              <option value="exec:exec@update-demo" />
               <option value="exec:exec@update-platform" />
+              <option value="exec:exec@update-demo" />
               <option value="-DskipTests" />
             </list>
           </option>
