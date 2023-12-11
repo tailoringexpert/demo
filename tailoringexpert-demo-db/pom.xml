@@ -22,11 +22,6 @@
 
 	<dependencies>
         <dependency>
-            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-db</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>provided</scope>
@@ -97,7 +92,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>update-demo</id>
+                        <id>update</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -105,19 +100,6 @@
                             <arguments>
                                 <argument>liquibase:update</argument>
                                 <argument>-Dliquibase.changeLogFile=db-tailoringexpert-demo/db.changelog-root.xml</argument>
-                                <argument>-P ${db}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>update-platform</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>liquibase:update</argument>
-                                <argument>-Dliquibase.changeLogFile=db-tailoringexpert/db.changelog-root.xml</argument>
                                 <argument>-P ${db}</argument>
                             </arguments>
                         </configuration>
