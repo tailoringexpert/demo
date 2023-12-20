@@ -101,7 +101,7 @@
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <maven-exec-plugin.version>3.1.1</maven-exec-plugin.version>
         <maven-compiler-plugin.version>3.12.0</maven-compiler-plugin.version>
-        <dependency-check-maven.version>9.0.4</dependency-check-maven.version>
+        <dependency-check-maven.version>9.0.7</dependency-check-maven.version>
         <dependency-check-maven.phase>install</dependency-check-maven.phase>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
