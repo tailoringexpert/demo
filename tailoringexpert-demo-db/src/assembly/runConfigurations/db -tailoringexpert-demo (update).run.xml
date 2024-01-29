@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="db -tailoringexpert-demo (install)" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="db -tailoringexpert-demo (update)" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings">
         <MavenGeneralSettings>
@@ -45,7 +45,7 @@
             <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/../../git/tailoringexpert/plattform/tailoringexpert-db" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/../../git/tailoringexpert/demo/tailoringexpert-demo-db" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
