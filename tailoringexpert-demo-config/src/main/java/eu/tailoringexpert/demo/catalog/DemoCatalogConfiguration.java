@@ -21,6 +21,7 @@
  */
 package eu.tailoringexpert.demo.catalog;
 
+import eu.tailoringexpert.catalog.BaseCatalogExcelDocumentCreator;
 import eu.tailoringexpert.catalog.BaseCatalogPDFDocumentCreator;
 import eu.tailoringexpert.catalog.BaseDRDPDFDocumentCreator;
 
@@ -35,8 +36,15 @@ public class DemoCatalogConfiguration {
 
 
     @Bean
-    DemoDocumentService demoCatalogDocumentService(@NonNull BaseCatalogPDFDocumentCreator baseCatalogPDFDocumentCreator, @NonNull BaseDRDPDFDocumentCreator baseDRDPDFDocumentCreator) {
-        return new DemoDocumentService(baseCatalogPDFDocumentCreator, baseDRDPDFDocumentCreator);
+    DemoDocumentService demoCatalogDocumentService(
+        @NonNull BaseCatalogPDFDocumentCreator baseCatalogPDFDocumentCreator,
+        @NonNull BaseDRDPDFDocumentCreator baseDRDPDFDocumentCreator,
+        @NonNull BaseCatalogExcelDocumentCreator baseCatalogExcelDocumentCreator) {
+        return new DemoDocumentService(
+            baseCatalogPDFDocumentCreator,
+            baseCatalogExcelDocumentCreator,
+            baseDRDPDFDocumentCreator
+        );
     }
 
 

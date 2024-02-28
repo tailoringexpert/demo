@@ -9,52 +9,6 @@
             content: attr(data-title) '\A';
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </style>
     <title>Datenschutzerklärung</title>
 </head>
@@ -67,7 +21,7 @@
 
 <p>
     Wir freuen uns sehr über Ihr Interesse an unserer Website. Datenschutz hat einen besonders hohen Stellenwert für die
-    ${ORGANISATION}. Eine Nutzung der Internetseiten der ${ORGANISATION} ist grundsätzlich ohne jede Angabe
+    {{ORGANIZATION}}. Eine Nutzung der Internetseiten der ${ORGANISATION} ist grundsätzlich ohne jede Angabe
     personenbezogener Daten möglich. Sofern eine betroffene Person besondere Services unseres Website über unsere
     Internetseite in Anspruch nehmen möchte, könnte jedoch eine Verarbeitung personenbezogener Daten erforderlich
     werden. Ist die Verarbeitung personenbezogener Daten erforderlich und besteht für eine solche Verarbeitung keine
@@ -176,14 +130,15 @@
 <h2>2. Name und Anschrift des für die Verarbeitung Verantwortlichen</h2>
 <p>
     Verantwortlicher im Sinne der Datenschutz-Grundverordnung, sonstiger in den Mitgliedstaaten der Europäischen Union
-    geltenden Datenschutzgesetze und anderer Bestimmungen mit datenschutzrechtlichem Charakter ist die:
-    ${ORGANISATION}<br/>
-    ${STRASSE}<br/>
-    ${PLZ} ${ORT}<br/>
-    Kontakt: ${KONTAKT_NAME}<br/>
-    Telefon: ${TELEFON}<br/>
-    Telefax: ${TELFAX}<br/>
-    e-Mail: ${KONTAKT_EMAIL}<br/>
+    geltenden Datenschutzgesetze und anderer Bestimmungen mit datenschutzrechtlichem Charakter ist die: <br/>
+
+    {{ORGANIZATION}} <br/>
+    {{STREET}} <br/>
+    {{ZIP}} {{CITY}} <br/>
+    Kontakt: {{CONTACT_NAME}} <br/>
+    Telefon: {{PHONE}} <br/>
+    Telefax: {{FAX}} <br/>
+    e-Mail: {{EMAIL}} <br/>
 
     Website:
 </p>
@@ -191,11 +146,11 @@
 <h2>3. Name und Anschrift des Datenschutzbeauftragten</h2>
 <p>
     Der Datenschutzbeauftragte des für die Verarbeitung Verantwortlichen ist:<br/>
-    ${KONTAKT_NAME}<br/>
-    ${STRASSE}<br/>
-    ${PLZ} ${ORT}<br/>
-    Telefon: ${TELEFON}<br/>
-    e-Mail: ${KONTAKT_EMAIL}
+    {{CONTACT_NAME}}<br/>
+    {{STREET}}<br/>
+    {{ZIP}} {{CITY}}<br/>
+    Telefon: ${PHONE}<br/>
+    e-Mail: {{EMAIL}}
 </p>
 <p>
     Jede betroffene Person kann sich jederzeit bei allen Fragen und Anregungen zum Datenschutz direkt an unseren
