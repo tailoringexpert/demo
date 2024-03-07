@@ -48,7 +48,8 @@ import static org.mockito.Mockito.verify;
 
 class DemoDocumentServiceTest {
 
-    DocumentCreator catalogCreatorMock;
+    DocumentCreator catalogPDFCreatorMock;
+    DocumentCreator catalogExcelCreatorMock;
     DocumentCreator drdCreatorMock;
     DocumentServiceRepository serviceRepositoryMock;
 
@@ -56,14 +57,15 @@ class DemoDocumentServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        this.catalogCreatorMock = mock(DocumentCreator.class);
+        this.catalogPDFCreatorMock = mock(DocumentCreator.class);
+        this.catalogExcelCreatorMock = mock(DocumentCreator.class);
         this.drdCreatorMock = mock(DocumentCreator.class);
         this.serviceRepositoryMock = mock(DocumentServiceRepository.class);
 
-
         this.serviceSpy = spy(
             new DemoDocumentService(
-                catalogCreatorMock,
+                catalogPDFCreatorMock,
+                catalogExcelCreatorMock,
                 drdCreatorMock
             )
         );
@@ -75,7 +77,7 @@ class DemoDocumentServiceTest {
         Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder().version("8.2.1").build();
 
         File catalogFile = File.builder().name("catalog.pdf").build();
-        given(catalogCreatorMock.createDocument(anyString(), any(Catalog.class), any(Map.class)))
+        given(catalogPDFCreatorMock.createDocument(anyString(), any(Catalog.class), any(Map.class)))
             .willReturn(catalogFile);
 
         File drdFile = File.builder().name("drd.pdf").build();
@@ -91,7 +93,7 @@ class DemoDocumentServiceTest {
             .hasSize(2)
             .containsOnly(catalogFile, drdFile);
 
-        verify(catalogCreatorMock, times(1)).createDocument(anyString(), any(Catalog.class), any(Map.class));
+        verify(catalogPDFCreatorMock, times(1)).createDocument(anyString(), any(Catalog.class), any(Map.class));
         verify(drdCreatorMock, times(1)).createDocument(anyString(), any(Catalog.class), any(Map.class));
     }
 
@@ -104,7 +106,7 @@ class DemoDocumentServiceTest {
 
         // assert
         assertThat(actual).isInstanceOf(NullPointerException.class);
-        verify(catalogCreatorMock, times(0)).createDocument(any(), any(), any());
+        verify(catalogPDFCreatorMock, times(0)).createDocument(any(), any(), any());
     }
 
     @Test
@@ -115,7 +117,7 @@ class DemoDocumentServiceTest {
         Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder().version("8.2.1").build();
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
-        given(catalogCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
+        given(catalogPDFCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
             .willReturn(File.builder().build());
 
         // act
@@ -135,11 +137,62 @@ class DemoDocumentServiceTest {
         Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder().version("8.2.1").build();
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
-        given(catalogCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
+        given(catalogPDFCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
             .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createCatalog(catalog, now);
+
+        // assert
+        assertThat(actual).isEmpty();
+        assertThat(placeholderCaptor.getValue()).containsKeys("DRD_DOCID");
+    }
+
+    @Test
+    void createCatalogExcel_CatalogNull_NullPointerExceptionThrown() {
+        // arrange
+
+        // act
+        Throwable actual = catchThrowable(() -> serviceSpy.createCatalogExcel(null, LocalDateTime.now()));
+
+        // assert
+        assertThat(actual).isInstanceOf(NullPointerException.class);
+        verify(catalogExcelCreatorMock, times(0)).createDocument(any(), any(), any());
+    }
+
+    @Test
+    void createCatalogExcel_MockCallWithValidValues_FileReturned() {
+        // arrange
+        String docId = "PA,Safety & Sustainability-Katalog_8.2.1";
+        LocalDateTime now = LocalDateTime.now();
+        Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder().version("8.2.1").build();
+        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
+
+        given(catalogExcelCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
+            .willReturn(File.builder().build());
+
+        // act
+        Optional<File> actual = serviceSpy.createCatalogExcel(catalog, now);
+
+        // assert
+        assertThat(actual).isNotEmpty();
+        assertThat(placeholderCaptor.getValue()).containsKeys("DRD_DOCID");
+    }
+
+
+    @Test
+    void createCatalogExcel_MockCallReturnedNull_EmptyReturned() {
+        // arrange
+        String docId = "PA,Safety & Sustainability-Katalog_8.2.1";
+        LocalDateTime now = LocalDateTime.now();
+        Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder().version("8.2.1").build();
+        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
+
+        given(catalogExcelCreatorMock.createDocument(eq(docId), eq(catalog), placeholderCaptor.capture()))
+            .willReturn(null);
+
+        // act
+        Optional<File> actual = serviceSpy.createCatalogExcel(catalog, now);
 
         // assert
         assertThat(actual).isEmpty();

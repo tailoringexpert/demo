@@ -51,7 +51,10 @@ import static java.util.Optional.ofNullable;
 public class DemoDocumentService implements DocumentService {
 
     @NonNull
-    private DocumentCreator catalogCreator;
+    private DocumentCreator catalogPDFCreator;
+
+    @NonNull
+    private DocumentCreator catalogExcelCreator;
 
     @NonNull
     private DocumentCreator drdCreator;
@@ -81,9 +84,26 @@ public class DemoDocumentService implements DocumentService {
         placeholders.put("DRD_DOCID", "RD-PS-01");
 
         String docId = String.format("PA,Safety & Sustainability-Katalog_%s", catalog.getVersion());
-        File dokument = catalogCreator.createDocument(docId, catalog, placeholders);
+        File dokument = catalogPDFCreator.createDocument(docId, catalog, placeholders);
 
         log.info("FINISHED | created catalog document  {}", docId);
+        return ofNullable(dokument);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<File> createCatalogExcel(Catalog<BaseRequirement> catalog, LocalDateTime creationTimestamp) {
+        log.info("STARTED | trying to create excel of catalog version {}", catalog.getVersion());
+
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("DRD_DOCID", "RD-PS-01");
+
+        String docId = String.format("PA,Safety & Sustainability-Katalog_%s", catalog.getVersion());
+        File dokument = catalogExcelCreator.createDocument(docId, catalog, placeholders);
+
+        log.info("FINISHED | created excel catalog document  {}", docId);
         return ofNullable(dokument);
 
     }
