@@ -168,7 +168,7 @@ class RequirementControllerTest {
     public Stream<TailoringCatalogChapterResource> allChapters(TailoringCatalogChapterResource chapter) {
         return Stream.concat(
             of(chapter),
-            nonNull(chapter.getChapters()) ? chapter.getChapters().stream().flatMap(g -> allChapters(g)) : Stream.empty());
+            nonNull(chapter.getNodes()) ? chapter.getNodes().stream().flatMap(g -> allChapters(g)) : Stream.empty());
 
     }
 
