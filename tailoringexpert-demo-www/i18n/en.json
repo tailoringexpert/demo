@@ -1,0 +1,20 @@
+{
+  "tenant": {
+    "selectionvector": {
+      "A": "Product assurance",
+      "Q": "Quality assurance",
+     "M": "Maintainability",
+      "E": "EEE Components",
+      "P": "PMMP",
+      "R": "Reliability",
+      "S": "Safety",
+      "W": "Software",
+      "C": "Cyber- and Datasecurity",
+      "J": "Space Debris",
+      "F": "Planetary Protection",
+      "B": "Ground Segment",
+      "G": "Engineering",
+      "N": "Management"
+    }
+  }
+}
