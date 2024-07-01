@@ -9,7 +9,7 @@
     <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
 
     <inceptionYear>2022</inceptionYear>
 
@@ -77,8 +77,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.4</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.1.4</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.5-SNAPSHOT</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.2.1-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.10.2</junit-jupiter.version>
