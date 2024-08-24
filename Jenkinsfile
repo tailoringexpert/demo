@@ -38,22 +38,25 @@ pipeline {
     }
 
     agent {
-		docker {
-			image 'tailoringexpert/mvn-openjdk-17'
-			args '''
-                -v $M2_VOLUME:/home/.m2 \
-                -v $GPG_VOLUME:/home/.gnupg \
+        docker {
+            image 'tailoringexpert/maven:3.9-eclipse-temurin-17-alpine'
+            args '''  
+				-u 1001
+                -v $GPG_VOLUME:/.gnupg\
+                -v $PWD:/data \
+                -v $M2_VOLUME:/home/maven \
                 -e GIT_CREDENTIALS=$GIT_CREDENTIALS \
-                -e GIT_COMMITTER_NAME=$GIT_COMMITTER_NAME 
+                -e GIT_COMMITTER_NAME=$GIT_COMMITTER_NAME \
                 -e GIT_COMMITTER_EMAIL=$GIT_COMMITTER_EMAIL \
                 -e NEXUS_SNAPSHOTURL=$NEXUS_SNAPSHOTURL \
                 -e NEXUS_RELEASEURL=$NEXUS_RELEASEURL \
                 -e NEXUS_CREDENTIALS_USR=$NEXUS_CREDENTIALS_USR \
                 -e NEXUS_CREDENTIALS_PSW=$NEXUS_CREDENTIALS_PSW \
                 -e GPG_SIGNKEY=$GPG_SIGNKEY \
-                -e SONAR_TOKEN=$SONAR_TOKEN
+                -e SONAR_TOKEN=$SONAR_TOKEN 
             '''
-       }	   
+            reuseNode true
+       }       
     }
 
     options {
@@ -76,13 +79,13 @@ pipeline {
 
         stage('build') {
             steps {
-				sh "mvn --settings .jenkins/settings.xml -DskipTests ${MVN_SKIP_MODULES} clean compile"
+				sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests ${MVN_SKIP_MODULES} clean compile"
             }
         }
 
         stage('verify') {
             steps {
-				sh "mvn --settings .jenkins/settings.xml ${MVN_SKIP_MODULES} verify"
+				sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository ${MVN_SKIP_MODULES} verify"
             }
 
             post {
@@ -108,7 +111,7 @@ pipeline {
 		stage("quality gate") {
             steps {
 			    withSonarQubeEnv('default') {
-	            	sh "mvn --settings .jenkins/settings.xml ${MVN_SKIP_MODULES} sonar:sonar"
+	            	sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository ${MVN_SKIP_MODULES} sonar:sonar"
                 }
                 
                 timeout(time: 1, unit: 'HOURS') {
@@ -119,7 +122,7 @@ pipeline {
 
         stage('install') {
 			steps {
-				sh "mvn --settings .jenkins/settings.xml -DskipTests install"
+				sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests install"
 			}
         }
 
@@ -136,7 +139,7 @@ pipeline {
 				sh('git config commit.gpgsign true')
 				sh('git config user.signingkey $GPG_SIGNKEY')
 				
-				sh "mvn --settings .jenkins/settings.xml -B -Dresume=false -DargLine='-DprocessAllModules --settings .jenkins/settings.xml' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true -DpostReleaseGoals=deploy gitflow:release" 
+				sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true -DpostReleaseGoals=deploy gitflow:release" 
 
 				// remove credentials
 				sh('git remote set-url origin $GIT_URL')
@@ -154,7 +157,7 @@ pipeline {
             steps {
                 script {
 					if (params.DEPLOY) {
-						sh "mvn --settings .jenkins/settings.xml -DskipTests deploy"
+						sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests deploy"
 					} else {
 						sh 'exit 0'
 					}
