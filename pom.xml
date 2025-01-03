@@ -287,6 +287,7 @@
                     <version>${jacoco-maven-plugin.version}</version>
                     <configuration>
                         <excludes>
+                            <exclude>**/*Configuration.class</exclude>
                             <exclude>**/*MapperGenerated.class</exclude>
                         </excludes>
                     </configuration>
