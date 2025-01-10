@@ -79,7 +79,7 @@ class RequirementControllerTest {
     }
 
     @Test
-    void updateChapterRequirementsState_ValidChapter_AllRequirementsDeselected() throws IOException {
+    void updateChapterRequirementsState_ValidChapter_AllRequirementsDeselected()  {
         // arrange
         CreateProjectTO createdProject = projektCreator.get();
 
@@ -101,7 +101,7 @@ class RequirementControllerTest {
     }
 
     @Test
-    void updateChapterRequirementsState_RequirementSelected_RequirementChangedToDeselected() throws IOException {
+    void updateChapterRequirementsState_RequirementSelected_RequirementChangedToDeselected() {
         // arrange
         CreateProjectTO createdProject = projektCreator.get();
 
@@ -123,7 +123,7 @@ class RequirementControllerTest {
 
 
     @Test
-    void updateRequirementText_NewTextGiven_RequirementTextUpdated() throws IOException {
+    void updateRequirementText_NewTextGiven_RequirementTextUpdated() {
         // arrange
         CreateProjectTO createdProject = projektCreator.get();
 
@@ -143,7 +143,7 @@ class RequirementControllerTest {
     }
 
     @Test
-    void createRequirement_PredecessorRequirementA_NewRequirementA1CreatedAndAdded() throws IOException {
+    void createRequirement_PredecessorRequirementA_NewRequirementA1CreatedAndAdded() {
         // arrange
         CreateProjectTO createdProject = projektCreator.get();
 

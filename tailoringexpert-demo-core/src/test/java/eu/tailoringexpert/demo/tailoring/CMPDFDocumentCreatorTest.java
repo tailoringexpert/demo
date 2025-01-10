@@ -147,7 +147,7 @@ class CMPDFDocumentCreatorTest {
         LocalDateTime now = LocalDateTime.now();
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("PROJEKT", "HRWS");
-        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.YYYY")));
+        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         placeholders.put("DOKUMENT", "HRWS-RD-PS-1940/DV7");
         placeholders.put("KATALOG_DOCID", "HRWS-RD-PS-1940/DV7_10000");
 
