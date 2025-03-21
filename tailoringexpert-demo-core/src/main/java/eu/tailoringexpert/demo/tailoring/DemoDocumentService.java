@@ -92,7 +92,7 @@ public class DemoDocumentService implements DocumentService {
 
     private static final String PATTERN_DATUM = "dd.MM.yyyy";
 
-    private static final String FORMAT_BASIS_DATEINAME = "%s-AR-SU-DLR-%s-DV-%s";
+    private static final String FORMAT_BASIS_DATEINAME = "%s-DEMO-TX-%s-DV-%s";
 
     /**
      * {@inheritDoc}
@@ -111,9 +111,10 @@ public class DemoDocumentService implements DocumentService {
         placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
         placeholders.put(PARAMETER_DATUM, creationTimestamp.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
 
-        String docId = String.format("%s-AR-SU-DLR-%s-DV-Tailoring-Diffs",
+        String docId = String.format(FORMAT_BASIS_DATEINAME,
             tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier());
+            tailoring.getIdentifier(),
+            "Tailoring-Diffs");
 
         File document = comparisonPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
@@ -149,7 +150,7 @@ public class DemoDocumentService implements DocumentService {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
         placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
-        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-AR-SU-DLR-%s-DV",
+        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
             tailoring.getScreeningSheet().getProject(),
             tailoring.getIdentifier()));
 
@@ -262,7 +263,7 @@ public class DemoDocumentService implements DocumentService {
         placeholders.put(PARAMETER_DRD_DOCID, drdDocId);
         placeholders.put(PARAMETER_SHOWALL, Boolean.toString(internal));
 
-        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-AR-SU-DLR-%s-DV",
+        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
             tailoring.getScreeningSheet().getProject(),
             tailoring.getIdentifier())
         );
