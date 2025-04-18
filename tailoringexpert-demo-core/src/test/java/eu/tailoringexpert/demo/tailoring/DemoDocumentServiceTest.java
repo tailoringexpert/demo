@@ -133,7 +133,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-Tailoring-Diffs";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-Tailoring-Diffs";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(comparisonPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -154,7 +154,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-Tailoring-Diffs";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-Tailoring-Diffs";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(comparisonPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -190,7 +190,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-DRD";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-DRD";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(drdPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -211,7 +211,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-DRD";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-DRD";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(drdPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -249,7 +249,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CM";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -271,7 +271,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CM";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -307,7 +307,7 @@ class DemoDocumentServiceTest {
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CM";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmSpreadsheetDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -344,7 +344,7 @@ class DemoDocumentServiceTest {
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
             .selectionVector(SelectionVector.builder().level("W", 5).build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-Product Assurance Safety Sustainability Requirements";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-Product Assurance Safety Sustainability Requirements";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -366,7 +366,7 @@ class DemoDocumentServiceTest {
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
             .selectionVector(SelectionVector.builder().build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-Product Assurance Safety Sustainability Requirements";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-Product Assurance Safety Sustainability Requirements";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -402,7 +402,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CONFIG";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-CONFIG";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogSpreadsheetCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
@@ -423,7 +423,7 @@ class DemoDocumentServiceTest {
             .identifier("1000")
             .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
             .build();
-        String docId = "SAMPLE-AR-SU-DLR-1000-DV-CONFIG";
+        String docId = "SAMPLE-DEMO-TX-1000-DV-CONFIG";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogSpreadsheetCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))

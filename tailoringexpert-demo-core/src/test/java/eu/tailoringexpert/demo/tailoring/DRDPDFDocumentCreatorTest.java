@@ -155,7 +155,7 @@ class DRDPDFDocumentCreatorTest {
         LocalDateTime now = LocalDateTime.now();
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("PROJEKT", "SAMPLE");
-        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.YYYY")));
+        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         placeholders.put("DOKUMENT", "SAMPLE-RD-PS-1940/DV7");
 
         given(drdProviderMock.apply(any(), any()))
@@ -212,7 +212,7 @@ class DRDPDFDocumentCreatorTest {
         LocalDateTime now = LocalDateTime.now();
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("PROJEKT", "SAMPLE");
-        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.YYYY")));
+        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         placeholders.put("DOKUMENT", "SAMPLE-RD-PS-1940/DV7");
 
         given(drdProviderMock.apply(any(), any()))

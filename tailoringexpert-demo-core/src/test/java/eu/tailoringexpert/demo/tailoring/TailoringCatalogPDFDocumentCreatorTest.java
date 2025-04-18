@@ -80,7 +80,6 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 class TailoringCatalogPDFDocumentCreatorTest {
 
     String templateHome;
-    String assetHome;
     ObjectMapper objectMapper;
     FileSaver fileSaver;
 
@@ -162,7 +161,7 @@ class TailoringCatalogPDFDocumentCreatorTest {
         LocalDateTime now = LocalDateTime.now();
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("PROJEKT", "SAMPLE");
-        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.YYYY")));
+        placeholders.put("DATUM", now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         placeholders.put("DOKUMENT", "SAMPLE-RD-PS-1940/DV7");
         placeholders.put("SHOW_ALL", Boolean.TRUE.toString());
 
@@ -178,10 +177,10 @@ class TailoringCatalogPDFDocumentCreatorTest {
     @Test
     void doit() throws Exception {
         // arrange
-        String baseUri = new java.io.File(format("%s/%s/", templateHome, "/8.2.1/catalog")).toURL().toExternalForm();
-        // act
+        java.io.File file  = new java.io.File(format("%s/%s/", templateHome, "/8.2.1/catalog"));
 
-        URI actual = URI.create(baseUri);
+        // act
+        URI actual = file.toURI();
 
         // assert
         assertThatNoException();

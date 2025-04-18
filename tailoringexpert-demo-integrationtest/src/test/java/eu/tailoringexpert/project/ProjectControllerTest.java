@@ -144,7 +144,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getProject_ProjectExists_ProjectWithStateOKReturned() throws IOException {
+    void getProject_ProjectExists_ProjectWithStateOKReturned() {
         // arrange
         CreateProjectTO createdProject = projectCreator.get();
 
@@ -157,7 +157,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getScreeningSheet_ProjectScreeningSheetExists_ScreeningSheetValueWithoutRawDataReturned() throws IOException {
+    void getScreeningSheet_ProjectScreeningSheetExists_ScreeningSheetValueWithoutRawDataReturned() {
         // arrange
         CreateProjectTO createdProject = projectCreator.get();
 
@@ -196,7 +196,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    void deleteProject_ProjectExists_ProjectDeletedStateNoContentReturned() throws IOException {
+    void deleteProject_ProjectExists_ProjectDeletedStateNoContentReturned() {
         // arrange
         CreateProjectTO createdProject = projectCreator.get();
 
@@ -280,7 +280,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getSelectionVector_ProjectExists_SelectionVectorStateOKReturned() throws IOException {
+    void getSelectionVector_ProjectExists_SelectionVectorStateOKReturned() {
         // arrange
         CreateProjectTO createdProject = projectCreator.get();
 
