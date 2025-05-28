@@ -81,11 +81,10 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.5</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.1.5</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.1.6-SNAPSHOT</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.1.6-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
-        <junit-jupiter.version>5.12.1</junit-jupiter.version>
 
         <lombok.version>1.18.38</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -105,6 +104,7 @@
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <maven-exec-plugin.version>3.5.0</maven-exec-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <dependency-check-maven.version>12.1.1</dependency-check-maven.version>
         <dependency-check-maven.phase>install</dependency-check-maven.phase>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -360,15 +360,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit-jupiter.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
