@@ -42,7 +42,7 @@
 
         <dependency>
            <groupId>eu.tailoringexpert</groupId>
-            <artifactId>tailoringexpert-security</artifactId>
+            <artifactId>tailoringexpert-security-ldap</artifactId>
         </dependency>
 
         <dependency>

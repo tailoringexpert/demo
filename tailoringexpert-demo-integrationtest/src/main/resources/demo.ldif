@@ -1,0 +1,104 @@
+dn: DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: domain
+objectclass: extensibleObject
+dc: tailoringexpert
+
+dn: OU=groups,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: organizationalUnit
+ou: groups
+
+dn: OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: organizationalUnit
+ou: users
+
+dn: CN=tailoringexpert,OU=groups,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: groupOfNames
+cn: tailoringexpert
+ou: tailoringexpert
+member: CN=f_tx,OU=users,DC=tailoringexpert,DC=eu
+member: CN=f_tx-1,OU=users,DC=tailoringexpert,DC=eu
+member: CN=f_tx-2,OU=users,DC=tailoringexpert,DC=eu
+
+dn: CN=demo_all,OU=groups,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: groupOfNames
+cn: demo_all
+ou: demo_all
+member: CN=f_tx,OU=users,DC=tailoringexpert,DC=eu
+
+dn: CN=role1,OU=groups,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: groupOfNames
+cn: role1
+ou: role1
+member: CN=f_tx,OU=users,DC=tailoringexpert,DC=eu
+member: CN=f_tx-1,OU=users,DC=tailoringexpert,DC=eu
+
+dn: CN=role2,OU=groups,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: groupOfNames
+cn: role2
+ou: role2
+member: CN=f_tx,OU=users,DC=tailoringexpert,DC=eu
+member: CN=f_tx-2,OU=users,DC=tailoringexpert,DC=eu
+
+dn: CN=f_admin,OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: f_admin
+uid: f_admin
+userPassword: test1234!
+
+dn: CN=f_tx,OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: f_tx
+sn: Full User
+uid: f_tx
+userPassword: test1234!
+memberOf: CN=tailoringexpert,OU=groups,DC=tailoringexpert,DC=eu
+memberOf: CN=role1,OU=groups,DC=tailoringexpert,DC=eu
+memberOf: CN=role2,OU=groups,DC=tailoringexpert,DC=eu
+
+dn: CN=f_tx-1,OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: f_tx-1
+sn: Role1 user
+uid: f_tx-1
+userPassword: test1234!
+memberOf: CN=tailoringexpert,OU=groups,DC=tailoringexpert,DC=eu
+memberOf: CN=role1,OU=groups,DC=tailoringexpert,DC=eu
+
+dn: CN=f_tx-2,OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: f_tx-2
+sn: Role2 user
+uid: f_tx-2
+userPassword: test1234!
+memberOf: CN=tailoringexpert,OU=groups,DC=tailoringexpert,DC=eu
+memberOf: CN=role2,OU=groups,DC=tailoringexpert,DC=eu
+
+dn: CN=f_other,OU=users,DC=tailoringexpert,DC=eu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: f_other
+sn: Non tx user
+uid: f_other
+userPassword: test1234!
+memberOf: CN=role2,OU=groups,DC=tailoringexpert,DC=eu
