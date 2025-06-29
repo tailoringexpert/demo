@@ -5,14 +5,14 @@ meta {
 }
 
 post {
-  url: {{HOST}}{{links.refresh}}
+  url: {{HOST}}{{auth.refresh}}
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "userId": "f_tx",
-    "refreshToken": "{{refreshToken}}"
+    "userId": "{{USER}}",
+    "refreshToken": "{{auth.refreshToken}}"
   }
 }

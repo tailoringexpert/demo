@@ -11,7 +11,7 @@ get {
 }
 
 headers {
-  Authorization: Bearer {{accessToken}}
+  Authorization: Bearer {{auth.accessToken}}
 }
 
 script:post-response {
@@ -25,5 +25,5 @@ script:post-response {
   project.tailoring = links.tailoring.href;
   project.state = links.state.href;
   
-  bru.setEnvVar("project", project )
+  bru.setVar("project", project )
 }

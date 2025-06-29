@@ -12,14 +12,19 @@ post {
 
 body:json {
   {
-    "userId": "f_tx",
-    "password": "test1234!"
+    "userId": "{{USER}}",
+    "password": "{{PASSWORD}}"
   }
 }
 
 script:post-response {
   let data = res.body;
-  bru.setEnvVar("accessToken", data.accessToken);
-  bru.setEnvVar("refreshToken", data.refreshToken);
+  
+  const auth = {};
+  auth.accessToken = data.accessToken;
+  auth.refreshToken = data.refreshToken;
+  auth.refresh = data.links[0].href;
+  
+  bru.setVar("auth", auth);
   
 }
