@@ -1,8 +1,5 @@
 vars {
   HOST: http://localhost:8080
-  CATALOG: 8.2.2
+  USER: {{process.env.DEVELOPMENT_USER}}
+  PASSWORD: {{process.env.DEVELOPMENT_PASSWORD}}
 }
-vars:secret [
-  USER,
-  PASSWORD
-]
