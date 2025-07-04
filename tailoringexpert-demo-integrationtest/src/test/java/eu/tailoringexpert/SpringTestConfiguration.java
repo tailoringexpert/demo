@@ -30,11 +30,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.test.annotation.Rollback;
 
 import javax.sql.DataSource;
@@ -56,7 +52,7 @@ public class SpringTestConfiguration {
     static {
         System.setProperty("liquibase.secureParsing", "false");
         Dotenv env = Dotenv.configure().filename(".env.embeddedldap").load();
-        env.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
+        env.entries().forEach(e ->System.setProperty(e.getKey(), e.getValue()));
     }
 
     @Bean
