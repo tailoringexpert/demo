@@ -1,11 +1,11 @@
 meta {
-  name: authenticate - refresh
+  name: authenticate - login
   type: http
-  seq: 6
+  seq: 5
 }
 
 post {
-  url: {{HOST}}{{auth.refresh}}
+  url: {{HOST}}{{links.login}}
   body: json
   auth: inherit
 }
@@ -13,19 +13,18 @@ post {
 body:json {
   {
     "userId": "{{USER}}",
-    "refreshToken": "{{auth.refreshToken}}"
+    "password": "{{PASSWORD}}"
   }
 }
 
 script:post-response {
   let data = res.body;
   
-  const auth = bru.getVar("auth");
-  
+  const auth = {};
   auth.accessToken = data.accessToken;
   auth.refreshToken = data.refreshToken;
   auth.refresh = data.links[0].href;
   
-  bru.setVar("auth",  auth);
+  bru.setVar("auth", auth);
   
 }

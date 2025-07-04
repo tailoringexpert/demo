@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "tailoringexpert-arsu-integrationtest",
+  "name": "tailoringexpert-demo-integrationtest",
   "type": "collection",
   "ignore": [
     "node_modules",

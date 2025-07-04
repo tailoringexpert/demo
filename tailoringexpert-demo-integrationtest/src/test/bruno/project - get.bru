@@ -1,0 +1,37 @@
+meta {
+  name: project - get
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{HOST}}{{project.self}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}
+
+script:post-response {
+  let links = res.body.tailorings[0]._links;
+  
+  const tailoring = {};
+  tailoring.self = links.self.href;
+  tailoring.screeningsheet = links.screeningsheet.href;
+  tailoring.selectionvector = links.selectionvector.href;
+  tailoring.signature = links.signature.href;
+  tailoring.document = links.document.href;
+  tailoring.tailoringcatalog = links.tailoringcatalog.href;
+  tailoring.compare = links.compare.href;
+  tailoring.catalog = links.catalog.href;
+  tailoring.name = links.name.href;
+  tailoring.import = links.import.href;
+  tailoring.basecatalog = links.basecatalog.href;
+  tailoring.attachment = links.attachment.href;
+  tailoring.note = links.note.href;
+  tailoring.state = links.state.href;
+  
+  bru.setVar("tailoring", tailoring )
+}

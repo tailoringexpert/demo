@@ -1,0 +1,15 @@
+meta {
+  name: tailoring - get
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{HOST}}{{tailoring.self}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}

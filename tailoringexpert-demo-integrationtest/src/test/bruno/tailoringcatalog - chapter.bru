@@ -1,0 +1,30 @@
+meta {
+  name: tailoringcatalog - chapter
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{HOST}}{{tailoringcatalog.self}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}
+
+body:text {
+  master2
+}
+
+script:post-response {
+  let links = res.body._links;
+  
+  const chapter = {};
+  chapter.self = links.self.href;
+  chapter.requirement = links.requirement.href;
+  chapter.selection = links.selection.href;
+  
+  bru.setVar("chapter",chapter);
+}

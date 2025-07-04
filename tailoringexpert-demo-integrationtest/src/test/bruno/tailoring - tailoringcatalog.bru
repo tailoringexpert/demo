@@ -1,0 +1,15 @@
+meta {
+  name: tailoring - tailoringcatalog
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{HOST}}{{tailoring.tailoringcatalog}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}

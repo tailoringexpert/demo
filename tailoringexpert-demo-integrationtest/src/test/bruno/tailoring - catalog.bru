@@ -1,0 +1,27 @@
+meta {
+  name: tailoring - catalog
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{HOST}}{{tailoring.catalog}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}
+
+script:post-response {
+  let links = res.body.toc.children[0]._links;
+  
+  const tailoringcatalog = {};
+  tailoringcatalog.self = links.self.href;
+  tailoringcatalog.requirement = links.requirement.href;
+  tailoringcatalog.selection = links.selection.href;
+  
+  bru.setVar("tailoringcatalog",tailoringcatalog);
+  
+}

@@ -1,0 +1,15 @@
+meta {
+  name: catalog - import
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{HOST}}/{{links.catalog}}
+  body: file
+  auth: inherit
+}
+
+body:file {
+  file: @file(files\catalog.json) @contentType(application/json; charset=utf-8)
+}

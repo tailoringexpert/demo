@@ -1,0 +1,15 @@
+meta {
+  name: tailoring - selectionvector
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{HOST}}{{tailoring.selectionvector}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}

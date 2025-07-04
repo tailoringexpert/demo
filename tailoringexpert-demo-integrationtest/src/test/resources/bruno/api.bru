@@ -1,7 +1,7 @@
 meta {
   name: api
   type: http
-  seq: 4
+  seq: 3
 }
 
 get {
@@ -10,11 +10,16 @@ get {
   auth: inherit
 }
 
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
 script:post-response {
   let data = res.body;
   
   const links = {};
   links.login = data._links.login.href;
+  links.refresh = data._links.refresh.href;
   links.catalog = data._links.catalog.href;
   links.project = data._links.project.href;
   links.screeningsheet = data._links.screeningsheet.href;
