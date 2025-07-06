@@ -1,0 +1,30 @@
+{
+  "tenant": {
+    "Login": {
+      "title": "Willkommen zu TailoringeXpert",
+      "subTitle": "Anmelden zum starten",
+      "username": "Benutzername",
+      "username_placeholder": "demo",
+      "password": "Passwort",
+      "password_placeholder": "test1234!",
+      "login": "Login In"
+    },
+
+    "selectionvector": {
+      "A": "Produktsicherung",
+      "Q": "Qualitätssicherung",
+      "M": "Wartbarkeit",
+      "E": "EEE Komponenten",
+      "P": "PMMP",
+      "R": "Zuverlässigkeit",
+      "S": "Safety",
+      "W": "Software",
+      "C": "Cyber- and Datasecurity",
+      "J": "Space Debris",
+      "F": "Planetary Protection",
+      "B": "Bodensegment",
+      "G": "Engineering",
+      "N": "Management"
+    }
+  }
+}

@@ -1,5 +1,15 @@
 {
   "tenant": {
+    "Login": {
+      "title": "Welcome to TailoringeXpert",
+      "subTitle": "Sign in to continue",
+      "username": "Username",
+      "username_placeholder": "Username (demo)",
+      "password": "Password",
+      "password_placeholder": "Password (test1234!)",
+      "login": "Sign In"
+    },
+
     "selectionvector": {
       "A": "Product assurance",
       "Q": "Quality assurance",
