@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.catalog.CatalogService;
 import eu.tailoringexpert.project.ProjectService;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetService;
+import io.github.cdimascio.dotenv.Dotenv;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -41,7 +42,9 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource({
     "classpath:application.properties",
-    "classpath:application-test.properties"
+    "classpath:application-test.properties",
+    "classpath:application-ldap.properties",
+    "classpath:application-embeddedldap.properties"
 })
 @Import({
     LiquibaseAutoConfiguration.class
@@ -52,6 +55,9 @@ public class SpringTestConfiguration {
 
     static {
         System.setProperty("liquibase.secureParsing", "false");
+        Dotenv env = Dotenv.configure().filename(".env.embeddedldap").load();
+        env.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
+
     }
 
     @Bean
