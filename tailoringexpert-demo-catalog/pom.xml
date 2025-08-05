@@ -12,7 +12,7 @@
     <parent>
         <groupId>eu.tailoringexpert.demo</groupId>
         <artifactId>tailoringexpert-demo</artifactId>
-        <version>0.1.7-SNAPSHOT</version>
+        <version>0.1.7</version>
     </parent>
 
     <build>
