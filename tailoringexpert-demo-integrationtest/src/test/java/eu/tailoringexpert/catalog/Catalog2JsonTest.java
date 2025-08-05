@@ -24,6 +24,7 @@ package eu.tailoringexpert.catalog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.App;
 import eu.tailoringexpert.BaseCatalogImport;
+import eu.tailoringexpert.DemoConfiguration;
 import eu.tailoringexpert.FileSaver;
 import eu.tailoringexpert.TenantContext;
 import eu.tailoringexpert.domain.BaseRequirement;
@@ -46,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @Log4j2
-@SpringJUnitConfig(classes = {App.class})
+@SpringJUnitConfig(classes = {App.class, DemoConfiguration.class})
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 class Catalog2JsonTest {
 
