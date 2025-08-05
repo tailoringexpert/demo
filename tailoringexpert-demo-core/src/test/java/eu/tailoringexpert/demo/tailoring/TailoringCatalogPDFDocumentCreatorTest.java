@@ -28,7 +28,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.openhtmltopdf.extend.FSDOMMutator;
+import eu.tailoringexpert.domain.ApplicableDocumentProvider;
 import eu.tailoringexpert.domain.Catalog;
+import eu.tailoringexpert.domain.DRDProvider;
+import eu.tailoringexpert.domain.DocumentNumberComparator;
 import eu.tailoringexpert.domain.DocumentSignature;
 import eu.tailoringexpert.domain.DocumentSignatureState;
 import eu.tailoringexpert.domain.File;
@@ -41,7 +44,7 @@ import eu.tailoringexpert.renderer.RendererRequestConfigurationSupplier;
 import eu.tailoringexpert.renderer.TailoringexpertDOMMutator;
 import eu.tailoringexpert.renderer.ThymeleafTemplateEngine;
 import eu.tailoringexpert.tailoring.DRDApplicablePredicate;
-import eu.tailoringexpert.tailoring.DRDProvider;
+import eu.tailoringexpert.tailoring.RequirementSelectedPredicate;
 import eu.tailoringexpert.tailoring.TailoringCatalogPDFDocumentCreator;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.log4j.Log4j2;
@@ -58,6 +61,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static eu.tailoringexpert.domain.Phase.A;
 import static eu.tailoringexpert.domain.Phase.B;
@@ -83,6 +87,8 @@ class TailoringCatalogPDFDocumentCreatorTest {
     ObjectMapper objectMapper;
     FileSaver fileSaver;
 
+    DRDProvider<TailoringRequirement> drdProviderMock;
+    ApplicableDocumentProvider<TailoringRequirement> applicableDocumentProviderMock;
     TailoringCatalogPDFDocumentCreator creator;
 
 
@@ -115,7 +121,8 @@ class TailoringCatalogPDFDocumentCreatorTest {
 
         HTMLTemplateEngine templateEngine = new ThymeleafTemplateEngine(springTemplateEngine, supplier);
 
-        DRDProvider drdProviderMock = new DRDProvider(new DRDApplicablePredicate(Map.ofEntries(
+        this.drdProviderMock = new DRDProvider(
+            (Predicate<TailoringRequirement>) requirement -> ((TailoringRequirement) requirement).getSelected(),new DRDApplicablePredicate(Map.ofEntries(
             new SimpleEntry<>(ZERO, unmodifiableCollection(asList("MDR"))),
             new SimpleEntry<>(A, unmodifiableCollection(asList("SRR"))),
             new SimpleEntry<>(B, unmodifiableCollection(asList("PDR"))),
@@ -125,11 +132,16 @@ class TailoringCatalogPDFDocumentCreatorTest {
             new SimpleEntry<>(F, unmodifiableCollection(asList("EOM")))
         )));
 
+        this.applicableDocumentProviderMock = new ApplicableDocumentProvider(
+            new RequirementSelectedPredicate(),
+            new DocumentNumberComparator());
+
         FSDOMMutator domMutator = new TailoringexpertDOMMutator();
         this.creator = new TailoringCatalogPDFDocumentCreator(
+            drdProviderMock,
+            applicableDocumentProviderMock,
             templateEngine,
-            new PDFEngine(domMutator, supplier),
-            drdProviderMock
+            new PDFEngine(domMutator, supplier)
         );
     }
 

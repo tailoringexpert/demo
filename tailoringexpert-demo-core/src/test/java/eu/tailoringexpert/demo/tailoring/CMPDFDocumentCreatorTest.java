@@ -113,9 +113,9 @@ class CMPDFDocumentCreatorTest {
 
         this.drdProviderMock = mock(BiFunction.class);
         this.creator = new CMPDFDocumentCreator(
+            drdProviderMock,
             templateEngine,
-            new PDFEngine(domMutator, supplier),
-            drdProviderMock
+            new PDFEngine(domMutator, supplier)
         );
     }
 

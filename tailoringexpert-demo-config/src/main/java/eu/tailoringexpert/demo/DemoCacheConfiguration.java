@@ -25,6 +25,7 @@ import eu.tailoringexpert.project.JPAProjectServiceRepository;
 import eu.tailoringexpert.repository.BaseCatalogRepository;
 import eu.tailoringexpert.repository.DokumentSigneeRepository;
 import eu.tailoringexpert.repository.LogoRepository;
+import eu.tailoringexpert.tailoring.JPATailoringServiceRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +43,8 @@ public class DemoCacheConfiguration {
             BaseCatalogRepository.CACHE_BASECATALOGLIST,
             JPAProjectServiceRepository.CACHE_BASECATALOG,
             LogoRepository.CACHE_LOGO,
-            DokumentSigneeRepository.CACHE_DOCUMENTSIGNEE
+            DokumentSigneeRepository.CACHE_DOCUMENTSIGNEE,
+            JPATailoringServiceRepository.CACHE_PROFILES
         );
     }
 
