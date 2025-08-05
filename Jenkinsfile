@@ -35,6 +35,7 @@ pipeline {
         // GIT_COMMITTER_EMAIL  mail of the git committer
         // NEXUS_SNAPSHOTURL    url to deploy snapshots to
         // NEXUS_RELEASEURL     url to deploy releases to
+        // NEXUS_URL  
     }
 
     agent {
@@ -49,6 +50,7 @@ pipeline {
                 -e GIT_CREDENTIALS=$GIT_CREDENTIALS \
                 -e GIT_COMMITTER_NAME=$GIT_COMMITTER_NAME \
                 -e GIT_COMMITTER_EMAIL=$GIT_COMMITTER_EMAIL \
+                -e NEXUS_URL=$NEXUS_URL \
                 -e NEXUS_SNAPSHOTURL=$NEXUS_SNAPSHOTURL \
                 -e NEXUS_RELEASEURL=$NEXUS_RELEASEURL \
                 -e NEXUS_CREDENTIALS_USR=$NEXUS_CREDENTIALS_USR \
