@@ -9,7 +9,7 @@
     <groupId>eu.tailoringexpert.demo</groupId>
     <artifactId>tailoringexpert-demo</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.7</version>
+    <version>0.1.8-SNAPSHOT</version>
 
     <inceptionYear>2022</inceptionYear>
 
