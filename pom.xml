@@ -77,7 +77,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.7</tailoringexpert-dependencies.version>
+        <tailoringexpert-dependencies.version>0.2.0</tailoringexpert-dependencies.version>
         <tailoringexpert.version>0.2.0-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
