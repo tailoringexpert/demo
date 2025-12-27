@@ -21,7 +21,6 @@
  */
 package eu.tailoringexpert.catalog;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.App;
 import eu.tailoringexpert.BaseCatalogImport;
 import eu.tailoringexpert.DemoConfiguration;
@@ -39,6 +38,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;

@@ -1,0 +1,19 @@
+meta {
+  name: catalog - import
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{HOST}}{{links.catalog}}
+  body: file
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.access_token}}
+}
+
+body:file {
+  file: @file(files\catalog_8.2.1.json) @contentType(application/json; charset=utf-8)
+}

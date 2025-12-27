@@ -24,6 +24,7 @@ package eu.tailoringexpert.demo.catalog;
 import eu.tailoringexpert.Tenant;
 import eu.tailoringexpert.catalog.DocumentCreator;
 import eu.tailoringexpert.catalog.DocumentService;
+import eu.tailoringexpert.catalog.ToRevisedBaseCatalogFunction;
 import eu.tailoringexpert.domain.BaseRequirement;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.File;
@@ -38,6 +39,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 
+import static eu.tailoringexpert.catalog.ToRevisedBaseCatalogFunction.REPLACEMENT_ORIGINAL_VERSION;
+import static eu.tailoringexpert.catalog.ToRevisedBaseCatalogFunction.REPLACEMENT_REVISED_VERSION;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -59,7 +62,10 @@ public class DemoDocumentService implements DocumentService {
     @NonNull
     private DocumentCreator drdCreator;
 
+    @NonNull
+    private ToRevisedBaseCatalogFunction diffMapper;
 
+    private static final String FORMAT_BASIS_DATEINAME = "DEMO-TAILORINGEXPERT-DEMO-%s-1000_%s.pdf";
     /**
      * {@inheritDoc}
      */
@@ -88,6 +94,24 @@ public class DemoDocumentService implements DocumentService {
 
         log.info("FINISHED | created catalog document  {}", docId);
         return ofNullable(dokument);
+    }
+
+    @Override
+    public Optional<File> createCatalog(Catalog<BaseRequirement> base, Catalog<BaseRequirement> compare, LocalDateTime creationTimestamp) {
+        log.info("STARTED | trying to create diff catalog of versions {}", base.getVersion(), compare.getVersion());
+
+        Catalog<BaseRequirement> catalog = diffMapper.apply(base, compare, Map.of(
+            "/assets/" + REPLACEMENT_ORIGINAL_VERSION, "/assets/" + REPLACEMENT_REVISED_VERSION
+        ));
+
+        Optional<File> document = createCatalog(catalog, creationTimestamp);
+        Optional<File> result = document.map(doc -> File.builder()
+            .name(String.format(FORMAT_BASIS_DATEINAME, "RS", catalog.getVersion()))
+            .data(doc.getData())
+            .build());
+
+        log.info("FINISHED | created diff catalog document  {}", "RD-PS-01" + ".pdf");
+        return result;
     }
 
     /**

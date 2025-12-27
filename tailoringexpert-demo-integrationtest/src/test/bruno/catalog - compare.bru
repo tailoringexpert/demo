@@ -1,0 +1,15 @@
+meta {
+  name: catalog - compare
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{HOST}}/api/catalog/8.2.1/compare/9.0.0/pdf
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.access_token}}
+}

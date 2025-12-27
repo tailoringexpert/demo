@@ -21,7 +21,6 @@
  */
 package eu.tailoringexpert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.catalog.CatalogService;
 import eu.tailoringexpert.project.ProjectService;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetService;
@@ -29,22 +28,17 @@ import io.github.cdimascio.dotenv.Dotenv;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.boot.liquibase.autoconfigure.LiquibaseAutoConfiguration;
+import org.springframework.context.annotation.*;
 import org.springframework.test.annotation.Rollback;
+import tools.jackson.databind.ObjectMapper;
 
 import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({
     "classpath:application.properties",
-    "classpath:application-test.properties",
-    "classpath:application-ldap.properties",
-    "classpath:application-embeddedldap.properties"
+    "classpath:application-test.properties"
 })
 @Import({
     LiquibaseAutoConfiguration.class

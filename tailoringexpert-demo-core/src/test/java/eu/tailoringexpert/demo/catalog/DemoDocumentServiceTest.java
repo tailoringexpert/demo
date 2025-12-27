@@ -23,6 +23,7 @@ package eu.tailoringexpert.demo.catalog;
 
 import eu.tailoringexpert.catalog.DocumentCreator;
 import eu.tailoringexpert.catalog.DocumentServiceRepository;
+import eu.tailoringexpert.catalog.ToRevisedBaseCatalogFunction;
 import eu.tailoringexpert.domain.BaseRequirement;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.File;
@@ -52,6 +53,8 @@ class DemoDocumentServiceTest {
     DocumentCreator catalogExcelCreatorMock;
     DocumentCreator drdCreatorMock;
     DocumentServiceRepository serviceRepositoryMock;
+    ToRevisedBaseCatalogFunction diffMock;
+
 
     DemoDocumentService serviceSpy;
 
@@ -61,12 +64,14 @@ class DemoDocumentServiceTest {
         this.catalogExcelCreatorMock = mock(DocumentCreator.class);
         this.drdCreatorMock = mock(DocumentCreator.class);
         this.serviceRepositoryMock = mock(DocumentServiceRepository.class);
+        this.diffMock = mock(ToRevisedBaseCatalogFunction.class);
 
         this.serviceSpy = spy(
             new DemoDocumentService(
                 catalogPDFCreatorMock,
                 catalogExcelCreatorMock,
-                drdCreatorMock
+                drdCreatorMock,
+                diffMock
             )
         );
     }
@@ -199,4 +204,77 @@ class DemoDocumentServiceTest {
         assertThat(placeholderCaptor.getValue()).containsKeys("DRD_DOCID");
     }
 
+
+    @Test
+    void createCatalog_BaseCatalogRevisedNotCreated_NullPointerExceptionThrown() {
+        // arrange
+        Catalog<BaseRequirement> base = null;
+        Catalog<BaseRequirement> compare = Catalog.<BaseRequirement>builder().build();
+
+        given(diffMock.apply(eq(base), eq(compare), any())).willThrow(new NullPointerException());
+
+        // act
+        Throwable actual = catchThrowable(() -> serviceSpy.createCatalog(base, compare, LocalDateTime.now()));
+
+        // assert
+        assertThat(actual).isInstanceOf(NullPointerException.class);
+        verify(serviceSpy, times(0)).createCatalog(any(), any());
+    }
+
+    @Test
+    void createCatalog_CompareCatalogNull_NullPointerExceptionThrown() {
+        // arrange
+        Catalog<BaseRequirement> base = Catalog.<BaseRequirement>builder().build();
+        Catalog<BaseRequirement> compare = null;
+
+        given(diffMock.apply(eq(base), eq(compare), any())).willThrow(new NullPointerException());
+
+        // act
+        Throwable actual = catchThrowable(() -> serviceSpy.createCatalog(base, compare, LocalDateTime.now()));
+
+        // assert
+        assertThat(actual).isInstanceOf(NullPointerException.class);
+        verify(serviceSpy, times(0)).createCatalog(any(), any());
+    }
+
+    @Test
+    void createCatalog_CreateCatalogWithRevisedCalled_FileReturned() {
+        // arrange
+        String docId = "PA,Safety & Sustainability-Katalog_9.0.0";
+        LocalDateTime now = LocalDateTime.now();
+        Catalog<BaseRequirement> base = Catalog.<BaseRequirement>builder().version("8.2.1").build();
+        Catalog<BaseRequirement> compare = Catalog.<BaseRequirement>builder().version("9.0.0").build();
+        Catalog<BaseRequirement> revised = Catalog.<BaseRequirement>builder().version("9.0.0").build();
+
+
+        given(diffMock.apply(eq(base), eq(compare), any())).willReturn(revised);
+        given(catalogPDFCreatorMock.createDocument(eq(docId), eq(revised),any()))
+            .willReturn(File.builder().build());
+
+        // act
+        Optional<File> actual = serviceSpy.createCatalog(base, compare, now);
+
+        // assert
+        assertThat(actual).isNotEmpty();
+        verify(serviceSpy, times(1)).createCatalog(eq(revised), any());
+    }
+
+
+    @Test
+    void createCatalog_CreateCatalogWithRevisedCalled_EmptyReturned() {
+        // arrange
+        LocalDateTime now = LocalDateTime.now();
+        Catalog<BaseRequirement> base = Catalog.<BaseRequirement>builder().version("8.2.1").build();
+        Catalog<BaseRequirement> compare = Catalog.<BaseRequirement>builder().version("9.0.0").build();
+        Catalog<BaseRequirement> revised = Catalog.<BaseRequirement>builder().version("9.0.0").build();
+
+        given(diffMock.apply(eq(base), eq(compare), any())).willReturn(revised);
+
+        // act
+        Optional<File> actual = serviceSpy.createCatalog(base, compare, now);
+
+        // assert
+        assertThat(actual).isEmpty();
+        verify(serviceSpy, times(1)).createCatalog(eq(revised), any());
+    }
 }

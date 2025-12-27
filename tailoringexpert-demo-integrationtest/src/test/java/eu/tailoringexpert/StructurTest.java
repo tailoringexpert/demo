@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -21,52 +21,37 @@
  */
 package eu.tailoringexpert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.tailoringexpert.domain.BaseRequirement;
-import eu.tailoringexpert.domain.Catalog;
-import eu.tailoringexpert.domain.Chapter;
-import eu.tailoringexpert.domain.DRD;
-import eu.tailoringexpert.domain.Identifier;
-import eu.tailoringexpert.domain.Logo;
-import eu.tailoringexpert.domain.Phase;
-import eu.tailoringexpert.domain.Reference;
+import eu.tailoringexpert.domain.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.text.SimpleDateFormat;
-
-import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
-import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
-import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static java.util.Arrays.asList;
-import static java.util.Locale.GERMANY;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class StructurTest {
 
     FileSaver fileSaver;
-    ObjectMapper objectMapper;
+    JsonMapper objectMapper;
 
     @BeforeEach
     void beforeEach() {
         this.fileSaver = new FileSaver();
-        this.objectMapper = new ObjectMapper()
-            .registerModules(new JavaTimeModule())
-            .enable(FAIL_ON_UNKNOWN_PROPERTIES)
-            .enable(INDENT_OUTPUT)
-            .disable(FAIL_ON_EMPTY_BEANS)
-            .setVisibility(FIELD, ANY)
-            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd", GERMANY));
+        this.objectMapper = JsonMapper.builder()
+            .findAndAddModules()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
     }
 
     @Test
-    void doit() throws JsonProcessingException {
+    void doit() throws JacksonException {
         Catalog<BaseRequirement> catalog = Catalog.<BaseRequirement>builder()
             .toc(Chapter.<BaseRequirement>builder()
                 .name("/")

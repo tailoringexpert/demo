@@ -25,6 +25,7 @@ import eu.tailoringexpert.catalog.BaseCatalogExcelDocumentCreator;
 import eu.tailoringexpert.catalog.BaseCatalogPDFDocumentCreator;
 import eu.tailoringexpert.catalog.BaseDRDPDFDocumentCreator;
 
+import eu.tailoringexpert.catalog.ToRevisedBaseCatalogFunction;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -39,11 +40,13 @@ public class DemoCatalogConfiguration {
     DemoDocumentService demoCatalogDocumentService(
         @NonNull BaseCatalogPDFDocumentCreator baseCatalogPDFDocumentCreator,
         @NonNull BaseDRDPDFDocumentCreator baseDRDPDFDocumentCreator,
-        @NonNull BaseCatalogExcelDocumentCreator baseCatalogExcelDocumentCreator) {
+        @NonNull BaseCatalogExcelDocumentCreator baseCatalogExcelDocumentCreator,
+        @NonNull ToRevisedBaseCatalogFunction toRevisedBaseCatalogFunction) {
         return new DemoDocumentService(
             baseCatalogPDFDocumentCreator,
             baseCatalogExcelDocumentCreator,
-            baseDRDPDFDocumentCreator
+            baseDRDPDFDocumentCreator,
+            toRevisedBaseCatalogFunction
         );
     }
 

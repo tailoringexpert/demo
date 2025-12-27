@@ -1,0 +1,15 @@
+meta {
+  name: catalog - delete
+  type: http
+  seq: 19
+}
+
+delete {
+  url: {{HOST}}/api/catalog/9.0.0
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.access_token}}
+}

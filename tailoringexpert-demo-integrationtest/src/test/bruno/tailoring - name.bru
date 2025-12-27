@@ -1,0 +1,19 @@
+meta {
+  name: tailoring - name
+  type: http
+  seq: 17
+}
+
+put {
+  url: {{HOST}}{{tailoring.name}}
+  body: text
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.accessToken}}
+}
+
+body:text {
+  master2
+}

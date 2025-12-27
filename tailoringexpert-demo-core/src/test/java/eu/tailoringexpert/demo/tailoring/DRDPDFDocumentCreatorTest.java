@@ -21,12 +21,6 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.openhtmltopdf.extend.FSDOMMutator;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.Chapter;
@@ -50,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +70,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class DRDPDFDocumentCreatorTest {
@@ -83,7 +79,7 @@ class DRDPDFDocumentCreatorTest {
 
     String templateHome;
     String assetHome;
-    ObjectMapper objectMapper;
+    JsonMapper objectMapper;
     FileSaver fileSaver;
     BiFunction<Chapter<TailoringRequirement>, Collection<Phase>, Map<DRD, Set<String>>> drdProviderMock;
     DRDPDFDocumentCreator creator;
@@ -104,9 +100,10 @@ class DRDPDFDocumentCreatorTest {
         this.templateHome = env.get("TEMPLATE_HOME", "src/test/resources/templates/");
         this.assetHome = env.get("ASSET_HOME", "src/test/resources/assets/");
 
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.registerModules(new ParameterNamesModule(), new JavaTimeModule(), new Jdk8Module());
-        this.objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.objectMapper = JsonMapper.builder()
+            .findAndAddModules()
+            .disable(FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
 
         this.fileSaver = new FileSaver("target");
 
@@ -143,9 +140,11 @@ class DRDPDFDocumentCreatorTest {
         Catalog<TailoringRequirement> catalog;
         try (InputStream is = newInputStream(get("src/test/resources/tailoringcatalog.json"))) {
             assert nonNull(is);
-
-            catalog = objectMapper.readValue(is, new TypeReference<Catalog<TailoringRequirement>>() {
-            });
+            catalog = objectMapper.readValue(
+                is,
+                objectMapper.getTypeFactory()
+                    .constructParametricType(Catalog.class, TailoringRequirement.class)
+            );
         }
 
         Tailoring tailoring = Tailoring.builder()
@@ -200,9 +199,11 @@ class DRDPDFDocumentCreatorTest {
         Catalog<TailoringRequirement> catalog;
         try (InputStream is = newInputStream(get("src/test/resources/tailoringcatalog.json"))) {
             assert nonNull(is);
-
-            catalog = objectMapper.readValue(is, new TypeReference<Catalog<TailoringRequirement>>() {
-            });
+            catalog = objectMapper.readValue(
+                is,
+                objectMapper.getTypeFactory()
+                    .constructParametricType(Catalog.class, TailoringRequirement.class)
+            );
         }
 
         Tailoring tailoring = Tailoring.builder()

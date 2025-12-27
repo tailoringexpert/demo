@@ -1,0 +1,34 @@
+meta {
+  name: catalog - all
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{HOST}}{{links.catalog}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.access_token}}
+}
+
+script:post-response {
+  const basecatalog = {};
+  if (res.body.hasOwnProperty("_embedded")) {
+  
+    basecatalog.version =  res.body._embedded.baseCatalogVersions[0].version;
+    
+    let links = res.body._embedded.baseCatalogVersions[0]._links;
+    basecatalog.convert = res.body._links.convert.href;
+    basecatalog.self = links.self.href;
+    basecatalog.project = links.project.href;
+    basecatalog.pdf = links.pdf.href;
+    basecatalog.excel = links.excel.href;
+    basecatalog.json = links.json.href;
+    basecatalog.document = links.document.href;
+  }
+  
+  bru.setEnvVar("basecatalog", basecatalog )
+}

@@ -21,8 +21,6 @@
  */
 package eu.tailoringexpert.catalog;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.tailoringexpert.App;
 import eu.tailoringexpert.TenantContext;
 import eu.tailoringexpert.domain.BaseCatalogVersionResource;
@@ -40,6 +38,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,9 +80,11 @@ class CatalogControllerTest {
         Catalog<BaseRequirement> catalog;
         try (InputStream is = newInputStream(get("src/test/resources/basecatalog.json"))) {
             assert nonNull(is);
-
-            catalog = objectMapper.readValue(is, new TypeReference<Catalog<BaseRequirement>>() {
-            });
+            catalog = objectMapper.readValue(
+                is,
+                objectMapper.getTypeFactory()
+                    .constructParametricType(Catalog.class, BaseRequirement.class)
+            );
         }
 
         // act
@@ -101,9 +102,11 @@ class CatalogControllerTest {
         Catalog<BaseRequirement> catalog;
         try (InputStream is = newInputStream(get("src/test/resources/basecatalog.json"))) {
             assert nonNull(is);
-
-            catalog = objectMapper.readValue(is, new TypeReference<Catalog<BaseRequirement>>() {
-            });
+            catalog = objectMapper.readValue(
+                is,
+                objectMapper.getTypeFactory()
+                    .constructParametricType(Catalog.class, BaseRequirement.class)
+            );
         }
         controller.postBaseCatalog(catalog);
 

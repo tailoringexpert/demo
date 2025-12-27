@@ -1,0 +1,31 @@
+meta {
+  name: project - all
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{HOST}}{{links.projects}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{auth.access_token}}
+}
+
+script:post-response {
+  const project = {};
+  if (res.body.hasOwnProperty("_embedded")) {
+    let links = res.body._embedded.projects[0]._links;
+  
+    project.self = links.self.href;
+    project.screeningsheet = links.screeningsheet.href;
+    project.selectionvector = links.selectionvector.href;
+    project.screeningsheet = links.screeningsheet.href;
+    project.tailoring = links.tailoring.href;
+    project.state = links.state.href;
+  }
+  
+  bru.setVar("project", project )
+}

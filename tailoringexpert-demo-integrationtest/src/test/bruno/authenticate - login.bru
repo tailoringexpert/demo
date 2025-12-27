@@ -1,0 +1,58 @@
+meta {
+  name: authenticate - login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{IDM_HOST}}/realms/{{REALM}}/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:json {
+  {
+    "userId": "{{USER}}",
+    "password": "{{PASSWORD}}",
+    "client_id":"tailoringexpert",
+    "grant_type":  "authorization_code"
+  }
+}
+
+body:form-urlencoded {
+  username: {{USER}}
+  password: {{PASSWORD}}
+  client_id: {{CLIENT}}
+  grant_type: password
+}
+
+script:post-response {
+  const jwt = require('jsonwebtoken');
+  
+  let data = res.body;
+  
+  const auth = {};
+  auth.access_token = data.access_token;
+  auth.refresh_token = data.refresh_token;
+  
+  try {
+    const decoded = jwt.decode(data.access_token, { complete: false }); 
+      
+    console.log(decoded.tenant);
+    
+    if (decoded && decoded.tenant) {
+      bru.setVar('X-TENANT', decoded.tenant);
+      console.log("X-TENANT is " +  decoded.tenant);
+    }
+  
+  } catch (error) {
+    console.error('Failed to decode JWT:', error.message);
+  }
+  
+  
+  
+  console.log(auth);
+  
+  bru.setVar("auth", auth);
+  
+}

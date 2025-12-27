@@ -1,17 +1,17 @@
 meta {
-  name: catalog - get all
+  name: catalog - get
   type: http
-  seq: 6
+  seq: 7
 }
 
 get {
-  url: {{HOST}}{{links.catalog}}
+  url: {{HOST}}{{basecatalog.pdf}}
   body: none
   auth: inherit
 }
 
 headers {
-  Authorization: Bearer {{accessToken}}
+  Authorization: Bearer {{auth.access_token}}
 }
 
 script:post-response {

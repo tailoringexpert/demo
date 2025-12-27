@@ -77,8 +77,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
-        <tailoringexpert-dependencies.version>0.1.7</tailoringexpert-dependencies.version>
-        <tailoringexpert.version>0.2.0-SNAPSHOT</tailoringexpert.version>
+        <tailoringexpert-dependencies.version>0.2.1-SNAPSHOT</tailoringexpert-dependencies.version>
+        <tailoringexpert.version>0.2.1-SNAPSHOT</tailoringexpert.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <junit-jupiter.version>5.12.1</junit-jupiter.version>
@@ -198,12 +198,6 @@
 
             <dependency>
                 <groupId>eu.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-security-ldap</artifactId>
-                <version>${tailoringexpert.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>eu.tailoringexpert</groupId>
                 <artifactId>tailoringexpert-dependencies</artifactId>
                 <version>${tailoringexpert-dependencies.version}</version>
                 <type>pom</type>
@@ -219,6 +213,10 @@
         </dependency>
 
         <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jackson</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

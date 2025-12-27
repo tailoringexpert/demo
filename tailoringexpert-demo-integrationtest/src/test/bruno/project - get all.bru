@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{HOST}}{{links.project}}
+  url: {{HOST}}{{links.projects}}
   body: none
   auth: inherit
 }
@@ -15,15 +15,18 @@ headers {
 }
 
 script:post-response {
-  let links = res.body._embedded.projects[0]._links;
-  
   const project = {};
-  project.self = links.self.href;
-  project.screeningsheet = links.screeningsheet.href;
-  project.selectionvector = links.selectionvector.href;
-  project.screeningsheet = links.screeningsheet.href;
-  project.tailoring = links.tailoring.href;
-  project.state = links.state.href;
+  
+  if (res.body.hasOwnProperty("_embedded")) {
+    let links = res.body._embedded.projects[0]._links;
+    
+    project.self = links.self.href;
+    project.screeningsheet = links.screeningsheet.href;
+    project.selectionvector = links.selectionvector.href;
+    project.screeningsheet = links.screeningsheet.href;
+    project.tailoring = links.tailoring.href;
+    project.state = links.state.href;
+  }
   
   bru.setEnvVar("project", project )
 }

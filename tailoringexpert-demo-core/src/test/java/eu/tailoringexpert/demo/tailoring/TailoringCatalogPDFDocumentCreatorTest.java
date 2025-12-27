@@ -21,12 +21,6 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.openhtmltopdf.extend.FSDOMMutator;
 import eu.tailoringexpert.domain.ApplicableDocumentProvider;
 import eu.tailoringexpert.domain.Catalog;
@@ -52,6 +46,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -79,12 +74,13 @@ import static java.util.List.of;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class TailoringCatalogPDFDocumentCreatorTest {
 
     String templateHome;
-    ObjectMapper objectMapper;
+    JsonMapper objectMapper;
     FileSaver fileSaver;
 
     DRDProvider<TailoringRequirement> drdProviderMock;
@@ -97,9 +93,10 @@ class TailoringCatalogPDFDocumentCreatorTest {
         Dotenv env = Dotenv.configure().systemProperties().ignoreIfMissing().load();
         this.templateHome = env.get("TEMPLATE_HOME", "src/test/resources/templates/");
 
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.registerModules(new ParameterNamesModule(), new JavaTimeModule(), new Jdk8Module());
-        this.objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.objectMapper = JsonMapper.builder()
+            .findAndAddModules()
+            .disable(FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
 
         this.fileSaver = new FileSaver("target");
 
@@ -151,8 +148,11 @@ class TailoringCatalogPDFDocumentCreatorTest {
         Catalog<TailoringRequirement> catalog;
         try (InputStream is = newInputStream(get("src/test/resources/tailoringcatalog.json"))) {
             assert nonNull(is);
-            catalog = objectMapper.readValue(is, new TypeReference<Catalog<TailoringRequirement>>() {
-            });
+            catalog = objectMapper.readValue(
+                is,
+                objectMapper.getTypeFactory()
+                    .constructParametricType(Catalog.class, TailoringRequirement.class)
+            );
         }
 
         Collection<DocumentSignature> zeichnungen = of(
