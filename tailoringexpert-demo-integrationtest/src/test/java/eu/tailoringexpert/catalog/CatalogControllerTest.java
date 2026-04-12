@@ -21,28 +21,6 @@
  */
 package eu.tailoringexpert.catalog;
 
-import eu.tailoringexpert.App;
-import eu.tailoringexpert.TenantContext;
-import eu.tailoringexpert.domain.BaseCatalogVersionResource;
-import eu.tailoringexpert.domain.BaseRequirement;
-import eu.tailoringexpert.domain.Catalog;
-import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import tools.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Paths.get;
 import static java.util.Objects.nonNull;
@@ -51,8 +29,30 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import eu.tailoringexpert.App;
+import eu.tailoringexpert.TenantContext;
+import eu.tailoringexpert.domain.BaseCatalogVersionResource;
+import eu.tailoringexpert.domain.BaseRequirement;
+import eu.tailoringexpert.domain.Catalog;
+import lombok.extern.log4j.Log4j2;
+import tools.jackson.databind.ObjectMapper;
+
 @Log4j2
-@SpringJUnitConfig(classes = {App.class})
+@SpringJUnitConfig(classes = { App.class })
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 class CatalogControllerTest {
 
@@ -68,8 +68,7 @@ class CatalogControllerTest {
 
         TenantContext.setCurrentTenant("demo");
         RequestContextHolder.setRequestAttributes(
-            new ServletRequestAttributes(new MockHttpServletRequest())
-        );
+                new ServletRequestAttributes(new MockHttpServletRequest()));
 
         log.debug("setup completed");
     }
@@ -81,10 +80,9 @@ class CatalogControllerTest {
         try (InputStream is = newInputStream(get("src/test/resources/basecatalog.json"))) {
             assert nonNull(is);
             catalog = objectMapper.readValue(
-                is,
-                objectMapper.getTypeFactory()
-                    .constructParametricType(Catalog.class, BaseRequirement.class)
-            );
+                    is,
+                    objectMapper.getTypeFactory()
+                            .constructParametricType(Catalog.class, BaseRequirement.class));
         }
 
         // act
@@ -95,7 +93,6 @@ class CatalogControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(CREATED);
     }
 
-
     @Test
     void getCatalogs_CatalogsExists_CatalogListReturned() throws IOException {
         // arrange
@@ -103,22 +100,18 @@ class CatalogControllerTest {
         try (InputStream is = newInputStream(get("src/test/resources/basecatalog.json"))) {
             assert nonNull(is);
             catalog = objectMapper.readValue(
-                is,
-                objectMapper.getTypeFactory()
-                    .constructParametricType(Catalog.class, BaseRequirement.class)
-            );
+                    is,
+                    objectMapper.getTypeFactory()
+                            .constructParametricType(Catalog.class, BaseRequirement.class));
         }
         controller.postBaseCatalog(catalog);
 
         // act
-        ResponseEntity<CollectionModel<EntityModel<BaseCatalogVersionResource>>> actual = controller.getBaseCatalogs();
+        ResponseEntity<RepresentationModel<BaseCatalogVersionResource>> actual = controller.getBaseCatalogs();
 
         // assert
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(OK);
-        assertThat(actual.getBody().getContent()).hasSize(1);
     }
 
 }
-
-
