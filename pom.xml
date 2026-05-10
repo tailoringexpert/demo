@@ -87,6 +87,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <license.licenseName>gpl_v3</license.licenseName>
 
+
         <tailoringexpert-dependencies.version>0.2.6-SNAPSHOT</tailoringexpert-dependencies.version>
         <tailoringexpert.version>0.2.6-SNAPSHOT</tailoringexpert.version>
 
