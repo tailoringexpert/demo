@@ -21,36 +21,6 @@
  */
 package eu.tailoringexpert.project;
 
-import eu.tailoringexpert.App;
-import eu.tailoringexpert.BaseCatalogImport;
-import eu.tailoringexpert.ProjectCreator;
-import eu.tailoringexpert.TenantContext;
-import eu.tailoringexpert.domain.ProjectResource;
-import eu.tailoringexpert.domain.ScreeningSheet;
-import eu.tailoringexpert.domain.ScreeningSheetResource;
-import eu.tailoringexpert.domain.SelectionVector;
-import eu.tailoringexpert.domain.SelectionVectorResource;
-import eu.tailoringexpert.domain.TailoringResource;
-import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import static eu.tailoringexpert.domain.Phase.A;
 import static eu.tailoringexpert.domain.Phase.B;
 import static eu.tailoringexpert.domain.Phase.C;
@@ -65,9 +35,46 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import eu.tailoringexpert.App;
+import eu.tailoringexpert.BaseCatalogImport;
+import eu.tailoringexpert.DemoConfiguration;
+import eu.tailoringexpert.ProjectCreator;
+import eu.tailoringexpert.SpringTestConfiguration;
+import eu.tailoringexpert.TenantContext;
+import eu.tailoringexpert.domain.ProjectResource;
+import eu.tailoringexpert.domain.ScreeningSheet;
+import eu.tailoringexpert.domain.ScreeningSheetResource;
+import eu.tailoringexpert.domain.SelectionVector;
+import eu.tailoringexpert.domain.SelectionVectorResource;
+import eu.tailoringexpert.domain.TailoringResource;
+import lombok.extern.log4j.Log4j2;
+
 @Log4j2
-@SpringJUnitConfig(classes = {App.class})
+@SpringBootTest(classes = {App.class, DemoConfiguration.class, SpringTestConfiguration.class})
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Rollback
+@ActiveProfiles("test")
 class ProjectControllerTest {
 
     @Autowired

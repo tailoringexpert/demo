@@ -21,6 +21,14 @@
  */
 package eu.tailoringexpert;
 
+import static java.nio.file.Files.newInputStream;
+import static java.util.Objects.nonNull;
+
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import eu.tailoringexpert.project.CreateProjectTO;
 import eu.tailoringexpert.project.ProjectService;
 import eu.tailoringexpert.screeningsheet.ScreeningSheetService;
@@ -28,13 +36,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.function.Supplier;
-
-import static java.nio.file.Files.newInputStream;
-import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 public class ProjectCreator implements Supplier<CreateProjectTO> {
@@ -57,6 +58,6 @@ public class ProjectCreator implements Supplier<CreateProjectTO> {
             data = is.readAllBytes();
         }
 
-        return projectService.createProject("8.2.1", data, screeningSheetService.calculateSelectionVector(data), null);
+        return projectService.createProject("8.2.1", data, screeningSheetService.calculateSelectionVector(data), null, Optional.empty());
     }
 }

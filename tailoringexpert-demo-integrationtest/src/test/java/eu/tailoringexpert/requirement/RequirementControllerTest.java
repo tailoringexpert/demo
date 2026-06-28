@@ -21,28 +21,6 @@
  */
 package eu.tailoringexpert.requirement;
 
-import eu.tailoringexpert.App;
-import eu.tailoringexpert.BaseCatalogImport;
-import eu.tailoringexpert.ProjectCreator;
-import eu.tailoringexpert.TenantContext;
-import eu.tailoringexpert.domain.TailoringCatalogChapterResource;
-import eu.tailoringexpert.domain.TailoringRequirementResource;
-import eu.tailoringexpert.project.CreateProjectTO;
-import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.io.IOException;
-import java.util.stream.Stream;
-
 import static java.lang.Boolean.FALSE;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Stream.of;
@@ -51,9 +29,35 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import eu.tailoringexpert.App;
+import eu.tailoringexpert.BaseCatalogImport;
+import eu.tailoringexpert.ProjectCreator;
+import eu.tailoringexpert.TenantContext;
+import eu.tailoringexpert.domain.TailoringCatalogChapterResource;
+import eu.tailoringexpert.domain.TailoringRequirementResource;
+import eu.tailoringexpert.project.CreateProjectTO;
+import lombok.extern.log4j.Log4j2;
+
 @Log4j2
-@SpringJUnitConfig(classes = {App.class})
+@SpringBootTest(classes = {App.class})
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Rollback
+@ActiveProfiles("test")
 class RequirementControllerTest {
 
     @Autowired

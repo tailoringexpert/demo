@@ -22,6 +22,8 @@
 package eu.tailoringexpert.demo.tailoring;
 
 import com.openhtmltopdf.extend.FSDOMMutator;
+import com.openhtmltopdf.extend.FSObjectDrawerFactory;
+import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.Chapter;
 import eu.tailoringexpert.domain.DRD;
@@ -107,12 +109,13 @@ class CMPDFDocumentCreatorTest {
 
         ThymeleafTemplateEngine templateEngine = new ThymeleafTemplateEngine(springTemplateEngine, supplier);
         FSDOMMutator domMutator = new TailoringexpertDOMMutator();
+        FSObjectDrawerFactory objectDrawerFactory = new DefaultObjectDrawerFactory();
 
         this.drdProviderMock = mock(BiFunction.class);
         this.creator = new CMPDFDocumentCreator(
             drdProviderMock,
             templateEngine,
-            new PDFEngine(domMutator, supplier)
+            new PDFEngine(domMutator, objectDrawerFactory, supplier)
         );
     }
 

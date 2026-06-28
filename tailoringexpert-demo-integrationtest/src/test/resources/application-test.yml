@@ -1,0 +1,23 @@
+tailoringexpert:
+  home:
+    tenant: ${TENANT_CONFIG_HOME_TEST:src/test/resources/tenants}
+spring:
+  datasource:
+    url: jdbc:h2:mem:tailoringexpert;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: tailoringexpert_demo
+    password: test1234
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+    show-sql: false
+    database: h2
+  liquibase:
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    change-log: classpath:db-tailoringexpert/db.changelog-root.xml
+    drop-first: true

@@ -22,6 +22,8 @@
 package eu.tailoringexpert.demo.tailoring;
 
 import com.openhtmltopdf.extend.FSDOMMutator;
+import com.openhtmltopdf.extend.FSObjectDrawerFactory;
+import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.Chapter;
 import eu.tailoringexpert.domain.DRD;
@@ -41,7 +43,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockserver.client.MockServerClient;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import tools.jackson.databind.json.JsonMapper;
@@ -67,15 +68,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
 import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class DRDPDFDocumentCreatorTest {
-
-    static MockServerClient mockServer;
 
     String templateHome;
     String assetHome;
@@ -83,16 +79,6 @@ class DRDPDFDocumentCreatorTest {
     FileSaver fileSaver;
     BiFunction<Chapter<TailoringRequirement>, Collection<Phase>, Map<DRD, Set<String>>> drdProviderMock;
     DRDPDFDocumentCreator creator;
-
-    @BeforeAll
-    static void beforeAll() {
-        mockServer = startClientAndServer(1080);
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mockServer.close();
-    }
 
     @BeforeEach
     void setup() {
@@ -127,10 +113,11 @@ class DRDPDFDocumentCreatorTest {
 
         this.drdProviderMock = mock(BiFunction.class);
         FSDOMMutator domMutator = new TailoringexpertDOMMutator();
+        FSObjectDrawerFactory objectDrawerFactory = new DefaultObjectDrawerFactory();
         this.creator = new DRDPDFDocumentCreator(
             drdProviderMock,
             templateEngine,
-            new PDFEngine(domMutator, supplier)
+            new PDFEngine(domMutator, objectDrawerFactory, supplier)
         );
     }
 
@@ -171,18 +158,6 @@ class DRDPDFDocumentCreatorTest {
                             .build(), Collections.emptySet())
                 )
             );
-        mockServer
-            .when(request()
-                .withMethod("GET")
-                .withPath("/assets/demo/.*"))
-            .respond(httpRequest -> {
-                String asset = httpRequest.getPath().getValue().substring("/assets/demo/".length());
-                java.io.File file = new java.io.File(this.assetHome + asset);
-
-                return response()
-                    .withStatusCode(200)
-                    .withBody(readAllBytes(file.toPath()));
-            });
 
         // act
         File actual = creator.createDocument("4711", tailoring, placeholders);
@@ -225,18 +200,6 @@ class DRDPDFDocumentCreatorTest {
                             .build(), Collections.emptySet())
                 )
             );
-        mockServer
-            .when(request()
-                .withMethod("GET")
-                .withPath("/assets/demo/.*"))
-            .respond(httpRequest -> {
-                String asset = httpRequest.getPath().getValue().substring("/assets/demo/".length());
-                java.io.File file = new java.io.File(this.assetHome + asset);
-
-                return response()
-                    .withStatusCode(200)
-                    .withBody(readAllBytes(file.toPath()));
-            });
 
         // act
         File actual = creator.createDocument("4711", tailoring, placeholders);

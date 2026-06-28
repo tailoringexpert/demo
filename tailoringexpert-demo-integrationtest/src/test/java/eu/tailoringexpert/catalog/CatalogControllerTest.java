@@ -35,11 +35,13 @@ import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -52,8 +54,10 @@ import lombok.extern.log4j.Log4j2;
 import tools.jackson.databind.ObjectMapper;
 
 @Log4j2
-@SpringJUnitConfig(classes = { App.class })
+@SpringBootTest(classes = {App.class})
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Rollback
+@ActiveProfiles("test")
 class CatalogControllerTest {
 
     @Autowired

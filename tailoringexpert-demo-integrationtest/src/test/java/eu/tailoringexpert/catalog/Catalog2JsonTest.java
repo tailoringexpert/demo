@@ -21,34 +21,41 @@
  */
 package eu.tailoringexpert.catalog;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
+import java.io.IOException;
+import java.util.function.BiConsumer;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import eu.tailoringexpert.App;
 import eu.tailoringexpert.BaseCatalogImport;
 import eu.tailoringexpert.DemoConfiguration;
 import eu.tailoringexpert.FileSaver;
+import eu.tailoringexpert.SpringTestConfiguration;
 import eu.tailoringexpert.TenantContext;
 import eu.tailoringexpert.domain.BaseRequirement;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.project.ProjectServiceRepository;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.util.function.BiConsumer;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
-
 @Log4j2
-@SpringJUnitConfig(classes = {App.class, DemoConfiguration.class})
+@SpringBootTest(classes = {App.class, DemoConfiguration.class, SpringTestConfiguration.class})
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Rollback
+@ActiveProfiles("test")
 class Catalog2JsonTest {
 
     @Autowired

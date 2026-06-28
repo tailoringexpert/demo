@@ -113,8 +113,8 @@
     <h2>Table of Content</h2>
     <ul class="toc">
         <li><a th:href="'#toc'">Table of Content</a></li>
-        <li th:each="requirement: ${requirements.?[!#strings.isEmpty(chapter)]}">
-            <a th:href="'#' + ${requirement.chapter}" th:utext="${requirement.text}"></a>
+        <li th:each="chapter: ${chapters}">
+            <a th:href="'#' + ${chapter.chapter}" th:utext="${chapter.text}"></a>
         </li>
     </ul>
 </page-after>
