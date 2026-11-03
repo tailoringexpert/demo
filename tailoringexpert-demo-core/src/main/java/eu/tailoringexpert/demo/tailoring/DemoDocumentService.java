@@ -21,13 +21,7 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
-import eu.tailoringexpert.Tenant;
-import eu.tailoringexpert.domain.File;
-import eu.tailoringexpert.domain.Tailoring;
-import eu.tailoringexpert.tailoring.DocumentCreator;
-import eu.tailoringexpert.tailoring.DocumentService;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import static java.util.Optional.ofNullable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,19 +31,28 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.ToIntFunction;
 
-import static java.util.Optional.ofNullable;
+import eu.tailoringexpert.Tenant;
+import eu.tailoringexpert.domain.File;
+import eu.tailoringexpert.domain.Tailoring;
+import eu.tailoringexpert.tailoring.DiffDocumentCreator;
+import eu.tailoringexpert.tailoring.DocumentCreator;
+import eu.tailoringexpert.tailoring.DocumentService;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Demo implementation of (tailoring) @see {@link DocumentService}.<p>
+ * Demo implementation of (tailoring) @see {@link DocumentService}.
+ * <p>
  * Demo implements:
  * <ul>
- *     <li>Requirement PDF Catalog</li>
- *     <li>DRD PDF Document</li>
- *     <li>CM PDF Document</li>
- *     <li>Comparison PDF Document</li>
- *     <li>Requirement Excel List</li>
- *     <li>CM Excel Document</li>
+ * <li>Requirement PDF Catalog</li>
+ * <li>DRD PDF Document</li>
+ * <li>CM PDF Document</li>
+ * <li>Comparison PDF Document</li>
+ * <li>Requirement Excel List</li>
+ * <li>CM Excel Document</li>
  * </ul>
  *
  * @author Michael Bädorf
@@ -57,6 +60,9 @@ import static java.util.Optional.ofNullable;
 @Tenant("demo")
 @RequiredArgsConstructor
 public class DemoDocumentService implements DocumentService {
+    private ToIntFunction<String> baseCatalogueVersion = version -> List.of("8.2.1", "8.2.2", "9.0.0")
+            .indexOf(version);
+
     @NonNull
     private DocumentCreator catalogPDFDocumentCreator;
 
@@ -75,23 +81,18 @@ public class DemoDocumentService implements DocumentService {
     @NonNull
     private DocumentCreator cmSpreadsheetDocumentCreator;
 
-    private static final String PARAMETER_PROJEKT = "PROJEKT";
+    @NonNull
+    private DiffDocumentCreator diffDocumentCreator;
 
-    private static final String PARAMETER_DATUM = "DATUM";
-
-    private static final String PARAMETER_DOKUMENT = "DOKUMENT";
-
-    private static final String PARAMETER_SHOWALL = "SHOW_ALL";
-
-    private static final String PARAMETER_SELECTIONVECTOR = "SELECTIONVECTOR";
-    private static final String PARAMETER_SCREENINGSHEET = "SCREENINGSHEET";
-
-    private static final String PARAMETER_DRD_DOCID = "${DRD_DOCID}";
-
-    private static final String PARAMETER_KATALOG_DOCID = "KATALOG_DOCID";
+    private static final String CTX_PROJEKT = "PROJEKT";
+    private static final String CTX_DATUM = "DATUM";
+    private static final String CTX_DOKUMENT = "DOKUMENT";
+    private static final String CTX_SHOWALL = "SHOW_ALL";
+    private static final String CTX_SELECTIONVECTOR = "SELECTIONVECTOR";
+    private static final String CTX_DRD_DOCID = "${DRD_DOCID}";
+    private static final String CTX_KATALOG_DOCID = "KATALOG_DOCID";
 
     private static final String PATTERN_DATUM = "dd.MM.yyyy";
-
     private static final String FORMAT_BASIS_DATEINAME = "%s-DEMO-TX-%s-DV-%s";
 
     /**
@@ -108,13 +109,13 @@ public class DemoDocumentService implements DocumentService {
     @Override
     public Optional<File> createComparisonDocument(Tailoring tailoring, LocalDateTime creationTimestamp) {
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, creationTimestamp.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, creationTimestamp.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
 
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "Tailoring-Diffs");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "Tailoring-Diffs");
 
         File document = comparisonPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
@@ -140,7 +141,8 @@ public class DemoDocumentService implements DocumentService {
     }
 
     /**
-     * Create DRD document containing only templates referenced by selected requirements.
+     * Create DRD document containing only templates referenced by selected
+     * requirements.
      *
      * @param tailoring   tailoring to create DRD document for
      * @param currentTime creation timestamp to use
@@ -148,16 +150,16 @@ public class DemoDocumentService implements DocumentService {
      */
     Optional<File> createDRDPDFDocument(Tailoring tailoring, LocalDateTime currentTime) {
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
-        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier()));
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier()));
 
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "DRD");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "DRD");
 
         File document = drdPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
@@ -172,25 +174,25 @@ public class DemoDocumentService implements DocumentService {
      */
     Optional<File> createCMPDFDocument(Tailoring tailoring, LocalDateTime currentTime) {
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "CM");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "CM");
 
         String catalogDocId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "Product Assurance Safety Sustainability Requirements");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "Product Assurance Safety Sustainability Requirements");
 
         String drdDocId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "DRD");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "DRD");
 
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
-        placeholders.put(PARAMETER_DOKUMENT, docId);
-        placeholders.put(PARAMETER_KATALOG_DOCID, catalogDocId);
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_DOKUMENT, docId);
+        placeholders.put(CTX_KATALOG_DOCID, catalogDocId);
         placeholders.put("DRD_DOCID", drdDocId);
 
         File document = cmPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
@@ -206,13 +208,13 @@ public class DemoDocumentService implements DocumentService {
      */
     Optional<File> createCMSpreadsheetDocument(Tailoring tailoring, LocalDateTime currentTime) {
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
 
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "CM");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "CM");
 
         File document = cmSpreadsheetDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
@@ -227,13 +229,13 @@ public class DemoDocumentService implements DocumentService {
      */
     Optional<File> createTailoringRequirementSpreadsheetDocument(Tailoring tailoring, LocalDateTime currentTime) {
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
 
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "CONFIG");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "CONFIG");
 
         File document = catalogSpreadsheetDocumentCreator.createDocument(docId, tailoring, placeholders);
         return ofNullable(document);
@@ -246,35 +248,75 @@ public class DemoDocumentService implements DocumentService {
      * @param currentTime creation timestamp to use
      * @return created PDF File
      */
-    Optional<File> createTailoringRequirementDocument(Tailoring tailoring, LocalDateTime currentTime, boolean internal) {
+    Optional<File> createTailoringRequirementDocument(Tailoring tailoring, LocalDateTime currentTime,
+            boolean internal) {
         String docId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "Product Assurance Safety Sustainability Requirements");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "Product Assurance Safety Sustainability Requirements");
 
         String drdDocId = String.format(FORMAT_BASIS_DATEINAME,
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier(),
-            "DRD");
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier(),
+                "DRD");
 
         Map<String, Object> placeholders = new HashMap<>();
-        placeholders.put(PARAMETER_PROJEKT, tailoring.getScreeningSheet().getProject());
-        placeholders.put(PARAMETER_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
-        placeholders.put(PARAMETER_DRD_DOCID, drdDocId);
-        placeholders.put(PARAMETER_SHOWALL, Boolean.toString(internal));
+        placeholders.put(CTX_PROJEKT, tailoring.getScreeningSheet().getProject());
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+        placeholders.put(CTX_DRD_DOCID, drdDocId);
+        placeholders.put(CTX_SHOWALL, Boolean.toString(internal));
 
-        placeholders.put(PARAMETER_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
-            tailoring.getScreeningSheet().getProject(),
-            tailoring.getIdentifier())
-        );
+        placeholders.put(CTX_DOKUMENT, String.format("%s-DEMO-TX-%s-DV",
+                tailoring.getScreeningSheet().getProject(),
+                tailoring.getIdentifier()));
 
         List<DocumentSelectionVector> selectionVector = tailoring.getSelectionVector().getLevels()
-            .entrySet()
-            .stream().map(entry -> DocumentSelectionVector.builder().type(entry.getKey()).level(entry.getValue()).build())
-            .toList();
-        placeholders.put(PARAMETER_SELECTIONVECTOR, selectionVector);
+                .entrySet()
+                .stream()
+                .map(entry -> DocumentSelectionVector.builder().type(entry.getKey()).level(entry.getValue()).build())
+                .toList();
+        placeholders.put(CTX_SELECTIONVECTOR, selectionVector);
 
         File document = catalogPDFDocumentCreator.createDocument(docId, tailoring, placeholders);
+        return ofNullable(document);
+    }
+
+    @Override
+    public Optional<File> createDiffDocument(Tailoring base, Tailoring compare, LocalDateTime currentTime) {
+        // max index neuester katalog -> baseline
+        int indexBaseVersion = baseCatalogueVersion.applyAsInt(base.getCatalog().getVersion());
+        int indexCompareVersion = baseCatalogueVersion.applyAsInt(compare.getCatalog().getVersion());
+
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put(CTX_DATUM, currentTime.format(DateTimeFormatter.ofPattern(PATTERN_DATUM)));
+
+        String docId;
+        if (indexBaseVersion >= indexCompareVersion) {
+            docId = String.format(FORMAT_BASIS_DATEINAME,
+                    base.getScreeningSheet().getProject(),
+                    base.getIdentifier(),
+                    "Tailoring Diff");
+            placeholders.put("BASE_PROJECT", base.getScreeningSheet().getProject());
+            placeholders.put("BASE_TAILORING", base.getName());
+            placeholders.put("BASE_CATALOGUEVERSION", base.getCatalog().getVersion());
+            placeholders.put("COMPARE_PROJECT", compare.getScreeningSheet().getProject());
+            placeholders.put("COMPARE_TAILORING", compare.getName());
+            placeholders.put("COMAPRE_CATALOGUEVERSION", compare.getCatalog().getVersion());
+
+        } else {
+            docId = String.format(FORMAT_BASIS_DATEINAME,
+                    compare.getScreeningSheet().getProject(),
+                    compare.getIdentifier(),
+                    "Tailoring Diff");
+            placeholders.put("BASE_PROJECT", compare.getScreeningSheet().getProject());
+            placeholders.put("BASE_TAILORING", compare.getName());
+            placeholders.put("BASE_CATALOGUEVERSION", compare.getCatalog().getVersion());
+            placeholders.put("COMPARE_PROJECT", base.getScreeningSheet().getProject());
+            placeholders.put("COMPARE_TAILORING", base.getName());
+            placeholders.put("COMAPRE_CATALOGUEVERSION", base.getCatalog().getVersion());
+        }
+
+        File document = diffDocumentCreator.createDocument(docId, base, compare, placeholders);
         return ofNullable(document);
     }
 }

@@ -21,9 +21,37 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
+import static java.nio.file.Files.newInputStream;
+import static java.nio.file.Paths.get;
+import static java.util.Map.entry;
+import static java.util.Map.ofEntries;
+import static java.util.Objects.nonNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+
 import com.openhtmltopdf.extend.FSDOMMutator;
 import com.openhtmltopdf.extend.FSObjectDrawerFactory;
 import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
+
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.Chapter;
 import eu.tailoringexpert.domain.DRD;
@@ -39,36 +67,7 @@ import eu.tailoringexpert.renderer.ThymeleafTemplateEngine;
 import eu.tailoringexpert.tailoring.DRDPDFDocumentCreator;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
 import tools.jackson.databind.json.JsonMapper;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiFunction;
-
-import static java.nio.file.Files.newInputStream;
-import static java.nio.file.Files.readAllBytes;
-import static java.nio.file.Paths.get;
-import static java.util.Map.entry;
-import static java.util.Map.ofEntries;
-import static java.util.Objects.nonNull;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class DRDPDFDocumentCreatorTest {
@@ -136,6 +135,7 @@ class DRDPDFDocumentCreatorTest {
 
         Tailoring tailoring = Tailoring.builder()
             .catalog(catalog)
+            .issue("1")
             .build();
 
         LocalDateTime now = LocalDateTime.now();
@@ -183,6 +183,7 @@ class DRDPDFDocumentCreatorTest {
 
         Tailoring tailoring = Tailoring.builder()
             .catalog(catalog)
+            .issue("1")
             .build();
 
         LocalDateTime now = LocalDateTime.now();
