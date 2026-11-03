@@ -21,9 +21,43 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
+import static eu.tailoringexpert.domain.Phase.A;
+import static eu.tailoringexpert.domain.Phase.B;
+import static eu.tailoringexpert.domain.Phase.C;
+import static eu.tailoringexpert.domain.Phase.D;
+import static eu.tailoringexpert.domain.Phase.E;
+import static eu.tailoringexpert.domain.Phase.F;
+import static eu.tailoringexpert.domain.Phase.ZERO;
+import static java.lang.String.format;
+import static java.nio.file.Files.newInputStream;
+import static java.nio.file.Paths.get;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.List.of;
+import static java.util.Objects.nonNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+
 import com.openhtmltopdf.extend.FSDOMMutator;
 import com.openhtmltopdf.extend.FSObjectDrawerFactory;
 import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
+
 import eu.tailoringexpert.domain.ApplicableDocumentProvider;
 import eu.tailoringexpert.domain.Catalog;
 import eu.tailoringexpert.domain.DRDProvider;
@@ -44,39 +78,7 @@ import eu.tailoringexpert.tailoring.RequirementSelectedPredicate;
 import eu.tailoringexpert.tailoring.TailoringCatalogPDFDocumentCreator;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
 import tools.jackson.databind.json.JsonMapper;
-
-import java.io.InputStream;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Predicate;
-
-import static eu.tailoringexpert.domain.Phase.A;
-import static eu.tailoringexpert.domain.Phase.B;
-import static eu.tailoringexpert.domain.Phase.C;
-import static eu.tailoringexpert.domain.Phase.D;
-import static eu.tailoringexpert.domain.Phase.E;
-import static eu.tailoringexpert.domain.Phase.F;
-import static eu.tailoringexpert.domain.Phase.ZERO;
-import static java.lang.String.format;
-import static java.nio.file.Files.newInputStream;
-import static java.nio.file.Paths.get;
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.List.of;
-import static java.util.Objects.nonNull;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 @Log4j2
 class TailoringCatalogPDFDocumentCreatorTest {
@@ -168,6 +170,7 @@ class TailoringCatalogPDFDocumentCreatorTest {
         );
 
         Tailoring tailoring = Tailoring.builder()
+            .issue("1")
             .catalog(catalog)
             .signatures(zeichnungen)
             .phases(of(ZERO, A, B, C, D, E, F))

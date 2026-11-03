@@ -22,13 +22,15 @@
 package eu.tailoringexpert.demo.tailoring;
 
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import eu.tailoringexpert.tailoring.DiffDocumentCreator;
 import eu.tailoringexpert.tailoring.DocumentCreator;
 import eu.tailoringexpert.tailoring.DocumentService;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @Log4j2
 @Configuration
@@ -41,7 +43,8 @@ public class DemoTailoringConfiguration {
         @NonNull @Qualifier("comparisionPDFDocumentCreator") DocumentCreator comparisionPDFDocumentCreator,
         @NonNull @Qualifier("drdPDFDocumentCreator") DocumentCreator drdPDFDocumentCreator,
         @NonNull @Qualifier("cmPDFDocumentCreator") DocumentCreator cmPDFDocumentCreator,
-        @NonNull @Qualifier("cmSpreadsheetDocumentCreator") DocumentCreator cmSpreadsheetDocumentCreator) {
+        @NonNull @Qualifier("cmSpreadsheetDocumentCreator") DocumentCreator cmSpreadsheetDocumentCreator,
+        @NonNull @Qualifier("tailoringsDiffPDFDocumentCreator") DiffDocumentCreator tailoringDiffPDFDocumentCreator) {
 
         return new DemoDocumentService(
             tailoringCatalogPDFDocumentCreator,
@@ -49,7 +52,8 @@ public class DemoTailoringConfiguration {
             comparisionPDFDocumentCreator,
             drdPDFDocumentCreator,
             cmPDFDocumentCreator,
-            cmSpreadsheetDocumentCreator
+            cmSpreadsheetDocumentCreator,
+            tailoringDiffPDFDocumentCreator
         );
     }
 }

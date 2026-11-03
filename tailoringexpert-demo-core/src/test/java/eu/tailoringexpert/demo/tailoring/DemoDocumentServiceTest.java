@@ -21,22 +21,6 @@
  */
 package eu.tailoringexpert.demo.tailoring;
 
-import eu.tailoringexpert.domain.Catalog;
-import eu.tailoringexpert.domain.File;
-import eu.tailoringexpert.domain.ScreeningSheet;
-import eu.tailoringexpert.domain.SelectionVector;
-import eu.tailoringexpert.domain.Tailoring;
-import eu.tailoringexpert.domain.TailoringRequirement;
-import eu.tailoringexpert.tailoring.DocumentCreator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -49,6 +33,24 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+
+import eu.tailoringexpert.domain.Catalog;
+import eu.tailoringexpert.domain.File;
+import eu.tailoringexpert.domain.ScreeningSheet;
+import eu.tailoringexpert.domain.SelectionVector;
+import eu.tailoringexpert.domain.Tailoring;
+import eu.tailoringexpert.domain.TailoringRequirement;
+import eu.tailoringexpert.tailoring.DiffDocumentCreator;
+import eu.tailoringexpert.tailoring.DocumentCreator;
+
 class DemoDocumentServiceTest {
 
     DocumentCreator catalogPDFDocumentCreatorMock;
@@ -57,6 +59,7 @@ class DemoDocumentServiceTest {
     DocumentCreator cmPDFDocumentCreatorMock;
     DocumentCreator drdPDFDocumentCreatorMock;
     DocumentCreator cmSpreadsheetDocumentCreatorMock;
+    DiffDocumentCreator diffDocumentCreatorMock;
     DemoDocumentService serviceSpy;
 
     @BeforeEach
@@ -67,25 +70,26 @@ class DemoDocumentServiceTest {
         this.drdPDFDocumentCreatorMock = mock(DocumentCreator.class);
         this.cmPDFDocumentCreatorMock = mock(DocumentCreator.class);
         this.cmSpreadsheetDocumentCreatorMock = mock(DocumentCreator.class);
+        this.diffDocumentCreatorMock = mock(DiffDocumentCreator.class);
 
-        this.serviceSpy =
-            spy(
+        this.serviceSpy = spy(
                 new DemoDocumentService(
-                    catalogPDFDocumentCreatorMock,
-                    catalogSpreadsheetCreatorMock,
-                    comparisonPDFDocumentCreatorMock,
-                    drdPDFDocumentCreatorMock,
-                    cmPDFDocumentCreatorMock,
-                    cmSpreadsheetDocumentCreatorMock)
-            );
+                        catalogPDFDocumentCreatorMock,
+                        catalogSpreadsheetCreatorMock,
+                        comparisonPDFDocumentCreatorMock,
+                        drdPDFDocumentCreatorMock,
+                        cmPDFDocumentCreatorMock,
+                        cmSpreadsheetDocumentCreatorMock,
+                        diffDocumentCreatorMock));
     }
 
     @Test
     void createRequirementDocument_InternalVersionScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
         Throwable actual = catchThrowable(() -> serviceSpy.createRequirementDocument(tailoring, LocalDateTime.now()));
@@ -99,10 +103,11 @@ class DemoDocumentServiceTest {
     void createRequirementDocument_InternalVersion_() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
-            .selectionVector(SelectionVector.builder().build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
+                .selectionVector(SelectionVector.builder().build())
+                .build();
 
         // act
         serviceSpy.createRequirementDocument(tailoring, LocalDateTime.now());
@@ -115,8 +120,9 @@ class DemoDocumentServiceTest {
     void createComparisonDocument_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
         Throwable actual = catchThrowable(() -> serviceSpy.createComparisonDocument(tailoring, LocalDateTime.now()));
@@ -130,14 +136,15 @@ class DemoDocumentServiceTest {
     void createComparisonDocument_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-Tailoring-Diffs";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(comparisonPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
+                .willReturn(File.builder().build());
 
         // act
         Optional<File> actual = serviceSpy.createComparisonDocument(tailoring, LocalDateTime.now());
@@ -151,14 +158,15 @@ class DemoDocumentServiceTest {
     void createComparisonDocument_MockReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-Tailoring-Diffs";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(comparisonPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createComparisonDocument(tailoring, LocalDateTime.now());
@@ -172,8 +180,9 @@ class DemoDocumentServiceTest {
     void createDRDPDFDocument_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+
+                .identifier("1000")
+                .build();
 
         // act
         Throwable actual = catchThrowable(() -> serviceSpy.createDRDPDFDocument(tailoring, LocalDateTime.now()));
@@ -187,14 +196,15 @@ class DemoDocumentServiceTest {
     void createDRDPDFDocument_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-DRD";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(drdPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
+                .willReturn(File.builder().build());
 
         // act
         Optional<File> actual = serviceSpy.createDRDPDFDocument(tailoring, LocalDateTime.now());
@@ -208,14 +218,15 @@ class DemoDocumentServiceTest {
     void createDRDPDFDocument_MockCalledReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-DRD";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(drdPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createDRDPDFDocument(tailoring, LocalDateTime.now());
@@ -225,13 +236,13 @@ class DemoDocumentServiceTest {
         assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "DOKUMENT");
     }
 
-
     @Test
     void createCMPDFDokument_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
         Throwable actual = catchThrowable(() -> serviceSpy.createCMPDFDocument(tailoring, LocalDateTime.now()));
@@ -245,52 +256,57 @@ class DemoDocumentServiceTest {
     void createCMDPDFDocument_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
+                .willReturn(File.builder().build());
 
         // act
         Optional<File> actual = serviceSpy.createCMPDFDocument(tailoring, LocalDateTime.now());
 
         // assert
         assertThat(actual).isNotEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "DOKUMENT", "KATALOG_DOCID", "DRD_DOCID");
+        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "DOKUMENT", "KATALOG_DOCID",
+                "DRD_DOCID");
     }
 
     @Test
     void createCMPDFDocument_MockCallReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createCMPDFDocument(tailoring, LocalDateTime.now());
 
         // assert
         assertThat(actual).isEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "DOKUMENT", "KATALOG_DOCID", "DRD_DOCID");
+        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "DOKUMENT", "KATALOG_DOCID",
+                "DRD_DOCID");
     }
 
     @Test
     void createCMSpreadsheetDocument_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
         Throwable actual = catchThrowable(() -> serviceSpy.createCMSpreadsheetDocument(tailoring, LocalDateTime.now()));
@@ -303,15 +319,16 @@ class DemoDocumentServiceTest {
     void createCMSpreadsheetDocument_ChapterBasedMockCallReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-CM";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(cmSpreadsheetDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createCMSpreadsheetDocument(tailoring, LocalDateTime.now());
@@ -325,11 +342,13 @@ class DemoDocumentServiceTest {
     void createTailoringRequirementDocument_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
-        Throwable actual = catchThrowable(() -> serviceSpy.createTailoringRequirementDocument(tailoring, LocalDateTime.now(), true));
+        Throwable actual = catchThrowable(
+                () -> serviceSpy.createTailoringRequirementDocument(tailoring, LocalDateTime.now(), true));
 
         // assert
         assertThat(actual).isInstanceOf(NullPointerException.class);
@@ -340,55 +359,61 @@ class DemoDocumentServiceTest {
     void createTailoringRequirementDocument_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
-            .selectionVector(SelectionVector.builder().level("W", 5).build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
+                .selectionVector(SelectionVector.builder().level("W", 5).build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-Product Assurance Safety Sustainability Requirements";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
+                .willReturn(File.builder().build());
 
         // act
         Optional<File> actual = serviceSpy.createTailoringRequirementDocument(tailoring, LocalDateTime.now(), true);
 
         // assert
         assertThat(actual).isNotEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "${DRD_DOCID}", "SHOW_ALL", "DOKUMENT", "SELECTIONVECTOR");
+        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "${DRD_DOCID}", "SHOW_ALL",
+                "DOKUMENT", "SELECTIONVECTOR");
     }
 
     @Test
     void createTailoringRequirementDocument_MockCallReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
-            .selectionVector(SelectionVector.builder().build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").parameters(emptyList()).build())
+                .selectionVector(SelectionVector.builder().build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-Product Assurance Safety Sustainability Requirements";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogPDFDocumentCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
         Optional<File> actual = serviceSpy.createTailoringRequirementDocument(tailoring, LocalDateTime.now(), true);
 
         // assert
         assertThat(actual).isEmpty();
-        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "${DRD_DOCID}", "SHOW_ALL", "DOKUMENT", "SELECTIONVECTOR");
+        assertThat(placeholderCaptor.getValue()).containsKeys("PROJEKT", "DATUM", "${DRD_DOCID}", "SHOW_ALL",
+                "DOKUMENT", "SELECTIONVECTOR");
     }
 
     @Test
     void createTailoringRequirementSpreadsheet_ScreeningSheetNull_NullPointerExceptionThrown() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .build();
 
         // act
-        Throwable actual = catchThrowable(() -> serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring, LocalDateTime.now()));
+        Throwable actual = catchThrowable(
+                () -> serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring, LocalDateTime.now()));
 
         // assert
         assertThat(actual).isInstanceOf(NullPointerException.class);
@@ -399,17 +424,19 @@ class DemoDocumentServiceTest {
     void createTailoringRequirementSpreadsheet_MockCallWithValidValues_FileReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-CONFIG";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogSpreadsheetCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(File.builder().build());
+                .willReturn(File.builder().build());
 
         // act
-        Optional<File> actual = serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring, LocalDateTime.now());
+        Optional<File> actual = serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring,
+                LocalDateTime.now());
 
         // assert
         assertThat(actual).isNotEmpty();
@@ -420,17 +447,19 @@ class DemoDocumentServiceTest {
     void createTailoringRequirementSpreadsheet_MockCallReturnedNull_EmptyReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         String docId = "SAMPLE-DEMO-TX-1000-DV-CONFIG";
         ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
 
         given(catalogSpreadsheetCreatorMock.createDocument(eq(docId), eq(tailoring), placeholderCaptor.capture()))
-            .willReturn(null);
+                .willReturn(null);
 
         // act
-        Optional<File> actual = serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring, LocalDateTime.now());
+        Optional<File> actual = serviceSpy.createTailoringRequirementSpreadsheetDocument(tailoring,
+                LocalDateTime.now());
 
         // assert
         assertThat(actual).isEmpty();
@@ -441,23 +470,24 @@ class DemoDocumentServiceTest {
     void createAll_AllReturnedFile_6FilesReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         LocalDateTime now = LocalDateTime.now();
 
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createTailoringRequirementDocument(tailoring, now, false);
+                .when(serviceSpy).createTailoringRequirementDocument(tailoring, now, false);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createComparisonDocument(tailoring, now);
+                .when(serviceSpy).createComparisonDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createDRDPDFDocument(tailoring, now);
+                .when(serviceSpy).createDRDPDFDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createCMPDFDocument(tailoring, now);
+                .when(serviceSpy).createCMPDFDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createCMSpreadsheetDocument(tailoring, now);
+                .when(serviceSpy).createCMSpreadsheetDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createTailoringRequirementSpreadsheetDocument(tailoring, now);
+                .when(serviceSpy).createTailoringRequirementSpreadsheetDocument(tailoring, now);
 
         // act
         Collection<File> actual = serviceSpy.createAll(tailoring, now);
@@ -471,28 +501,113 @@ class DemoDocumentServiceTest {
     void createAll_OnelReturnedEmptyFile_5FilesReturned() {
         // arrange
         Tailoring tailoring = Tailoring.builder()
-            .identifier("1000")
-            .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
-            .build();
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("SAMPLE").build())
+                .build();
         LocalDateTime now = LocalDateTime.now();
 
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createTailoringRequirementDocument(tailoring, now, false);
+                .when(serviceSpy).createTailoringRequirementDocument(tailoring, now, false);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createComparisonDocument(tailoring, now);
+                .when(serviceSpy).createComparisonDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createDRDPDFDocument(tailoring, now);
+                .when(serviceSpy).createDRDPDFDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createCMPDFDocument(tailoring, now);
+                .when(serviceSpy).createCMPDFDocument(tailoring, now);
         doReturn(Optional.of(File.builder().build()))
-            .when(serviceSpy).createCMSpreadsheetDocument(tailoring, now);
+                .when(serviceSpy).createCMSpreadsheetDocument(tailoring, now);
         doReturn(Optional.empty())
-            .when(serviceSpy).createTailoringRequirementSpreadsheetDocument(tailoring, now);
+                .when(serviceSpy).createTailoringRequirementSpreadsheetDocument(tailoring, now);
 
         // act
         Collection<File> actual = serviceSpy.createAll(tailoring, now);
 
         // assert
         assertThat(actual).hasSize(5);
+    }
+
+    @Test
+    void createDiffDocument_BaseYoungerCompare_FileReturned() {
+        // arrange
+        Tailoring base = Tailoring.builder()
+                .name("base_master")
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.2").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("BASE").parameters(emptyList())
+                        .build())
+                .build();
+
+        Tailoring compare = Tailoring.builder()
+                .name("compare_master")
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.1").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("COMPARE").parameters(emptyList())
+                        .build())
+                .build();
+
+        String docId = "BASE-DEMO-TX-1000-DV-Tailoring Diff";
+        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
+
+        given(diffDocumentCreatorMock.createDocument(eq(docId), eq(base), eq(compare),
+                placeholderCaptor.capture()))
+                .willReturn(File.builder().build());
+
+        // act
+        Optional<File> actual = serviceSpy.createDiffDocument(base, compare, LocalDateTime.now());
+
+        // assert
+        assertThat(actual).isNotEmpty();
+        assertThat(placeholderCaptor.getValue()).containsAllEntriesOf(Map.of(
+                "BASE_PROJECT", "BASE",
+                "BASE_TAILORING", "base_master",
+                "BASE_CATALOGUEVERSION", "8.2.2",
+                "COMPARE_PROJECT", "COMPARE",
+                "COMPARE_TAILORING", "compare_master",
+                "COMAPRE_CATALOGUEVERSION", "8.2.1"));
+    }
+
+    @Test
+    void createDiffDocument_BaseOlderCompare_FileReturned() {
+        // arrange
+        Tailoring base = Tailoring.builder()
+                .name("base_master")                
+                .catalog(Catalog.<TailoringRequirement>builder().version("8.2.2").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("BASE").parameters(emptyList())
+                        .build())
+                .build();
+
+        Tailoring compare = Tailoring.builder()
+                .name("compare_master")
+                .catalog(Catalog.<TailoringRequirement>builder().version("9.0.0").build())
+                .issue("1")
+                .identifier("1000")
+                .screeningSheet(ScreeningSheet.builder().project("COMPARE").parameters(emptyList())
+                        .build())
+                .build();
+
+        String docId = "COMPARE-DEMO-TX-1000-DV-Tailoring Diff";
+        ArgumentCaptor<Map<String, Object>> placeholderCaptor = ArgumentCaptor.forClass(Map.class);
+
+        given(diffDocumentCreatorMock.createDocument(eq(docId), eq(base), eq(compare),
+                placeholderCaptor.capture()))
+                .willReturn(File.builder().build());
+
+        // act
+        Optional<File> actual = serviceSpy.createDiffDocument(base, compare, LocalDateTime.now());
+
+        // assert
+        assertThat(actual).isNotEmpty();
+        assertThat(placeholderCaptor.getValue()).containsAllEntriesOf(Map.of(
+                "BASE_PROJECT", "COMPARE",
+                "BASE_TAILORING", "compare_master",
+                "BASE_CATALOGUEVERSION", "9.0.0",
+                "COMPARE_PROJECT", "BASE",
+                "COMPARE_TAILORING", "base_master",
+                "COMAPRE_CATALOGUEVERSION", "8.2.2"));
     }
 }
