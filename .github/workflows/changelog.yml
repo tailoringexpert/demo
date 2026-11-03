@@ -1,39 +1,32 @@
-# This is a basic workflow that is manually triggered
-
 name: changelog
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number'     
-        required: true
 
 jobs:
-  evaluate-release-manager:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Evaluate release manager
-        id: check_release_manager
-        run: echo "status=${{contains(secrets.RELEASE_MANAGER, github.actor)}}" >> $GITHUB_OUTPUT
-      - name: Show evaluation result
-        run: echo "User ${{github.actor}} is release manager ${{steps.check_release_manager.output.status}}"
-
-    outputs:
-      status: ${{steps.check_release_manager.outputs.status }}
-
   create-changelog:
     runs-on: ubuntu-latest
-    needs: evaluate-release-manager
-    
-    if: ${{needs.evaluate-release-manager.outputs.status == 'true'}}
-    steps:  
-      - name: Show user inputs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Get raw version
+        id: pom_version
+        uses: NicolasBonnin/maven-get-version-action@2b4a1032d4406603c98e3d8a2c4fa1289b59b6dd
+
+      - name: Release version
+        id: release_version
         run: |
-          echo "Version: ${{ github.event.inputs.version }}" 
-        
+          RAW_VERSION=${{ steps.pom_version.outputs.version }}
+    
+          RELEASE_VERSION=${RAW_VERSION%-SNAPSHOT}
+          RELEASE_VERSION=${RELEASE_VERSION%-snapshot}
+    
+          echo "Release Version: $RELEASE_VERSION"
+    
+          echo "version=$RELEASE_VERSION" >> $GITHUB_OUTPUT     
+
       - name: Create tag
         uses: actions/github-script@v9
         with:
@@ -41,16 +34,13 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/v${{ github.event.inputs.version }}',
+              ref: 'refs/tags/v${{ steps.release_version.outputs.version }}',
               sha: context.sha
             })
 
-      - name: Checkout
-        uses: actions/checkout@v7
-
       - name: Generate changelog
         id: generate_changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.4
+        uses: janheinrichmerker/action-github-changelog-generator@e60b5a2bd9fcd88dadf6345ff8327863fb8b490f
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           filterByMilestone: true
@@ -79,6 +69,6 @@ jobs:
             github.rest.git.deleteRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'tags/v${{ github.event.inputs.version }}',
+              ref: 'tags/v${{ steps.release_version.outputs.version }}',
               sha: context.sha
-            })      
+            })
