@@ -1,17 +1,31 @@
-properties([
-    parameters([
+pipeline {
+    agent {
+        docker {
+            image "${env.MAVEN_IMAGE}"
+            args '''
+                --entrypoint='' \
+                -u 501:1000 \
+                -v $M2_VOLUME:/home/maven \
+                -v $PWD:/data
+            '''
+            reuseNode true
+       }
+    }
+
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '3', numToKeepStr: '3'))
+        disableConcurrentBuilds()
+    }
+
+    parameters {
         booleanParam(
             name: 'RELEASE_BUILD',
             defaultValue: false,
-            description: 'Creaate a release'),
+            description: 'Create a release')
         booleanParam(
             name: 'DEPLOY',
             defaultValue: false,
-            description: 'Deploy to tailoringxpert repo'),
-        booleanParam(
-            name: 'DEPLOY_TO_CUSTOM_REPOSITORY',
-            defaultValue: false,
-            description: 'Select also to maven repo defined by profile custom-maven'),              
+            description: 'Execute deployment step')
         gitParameter(
             name: 'BRANCH',
             branch: '',
@@ -19,60 +33,32 @@ properties([
             branchFilter: 'origin/(.*)',
             selectedValue: 'NONE',
             sortMode: 'NONE',
-            type: 'PT_BRANCH')
-    ])
-])
-
-pipeline {
+            type: 'PT_BRANCH',
+            description: 'Select target branch')
+    }
 
     environment {
+        GIT_REPOSITORY = 'tailoringexpert/demo.git' 
+        GIT_WORKSPACE = '/data'
         GIT_CREDENTIALS_ID = 'TAILORINGEXPERT_GITHUB_CREDENTIALS'
         GIT_CREDENTIALS = credentials('TAILORINGEXPERT_GITHUB_CREDENTIALS')
-        GPG_SIGNKEY = credentials('GITHUB_GPG_SIGNKEY')
-        NEXUS_CREDENTIALS = credentials('NEXUS_CREDENTIALS')
-        MAVEN_CUSTOM_CREDENTIALS = credentials('MAVEN_CUSTOM_CREDENTIALS')
-        SONAR_TOKEN = credentials('TAILORINGEXPERT_SONAR_TOKEN')
-        GIT_REPOSITORY = 'tailoringexpert/demo.git' 
-        
+        GIT_GPG_SIGNKEY_BASE64 = credentials('GIT_GITHUB_GPG_SIGNKEY_BASE64')
+        GIT_GPG_PASSPHRASE  = credentials('GIT_GITHUB_GPG_PASSPHRASE')
+
+        MAVEN_SETTINGS = "./settings.xml"
+        MAVEN_REPOSITORY = "/home/maven"
+        MAVEN_CREDENTIALS = credentials('MAVEN_SONATYPE_CREDENTIALS')
+        MAVEN_CREDENTIALS_USR = "${env.MAVEN_CREDENTIALS_USR}"
+        MAVEN_CREDENTIALS_PSW = "${env.MAVEN_CREDENTIALS_PSW}"
+        MAVEN_GPG_SIGNKEY_BASE64 = credentials('MAVEN_SONATYPE_GPG_SIGNKEY_BASE64')
+        MAVEN_GPG_PASSPHRASE = credentials('MAVEN_SONATYPE_GPG_PASSPHRASE')
+
+        SONAR_TOKEN = credentials('SONAR_SONAYTPE_TOKEN')
+        SONAR_HOSTURL = "${env.SONAR_SONATYPE_HOSTURL}"
         // other (external) defined env vars
         // M2_VOLUME maven      repoository volume
-        // GPG_VOLUME           gpg key volume
         // GIT_COMMITTER_NAME   name of the git committer
         // GIT_COMMITTER_EMAIL  mail of the git committer
-        // NEXUS_SNAPSHOTURL    url to deploy snapshots to
-        // NEXUS_RELEASEURL     url to deploy releases to
-    }
-
-    agent {
-        docker {
-            image 'tailoringexpert/maven:3.9-eclipse-25'
-            args '''  
-			    --network jenkins_jenkins \
-                -u 501:1000 \
-                -v "$GPG_VOLUME:/.gnupg" \
-                -v "$PWD:/data" \
-                -v "$M2_VOLUME:/home/maven" \
-                -e GIT_CREDENTIALS=$GIT_CREDENTIALS \
-                -e GIT_COMMITTER_NAME=$GIT_COMMITTER_NAME \
-                -e GIT_COMMITTER_EMAIL=$GIT_COMMITTER_EMAIL \
-                -e NEXUS_SNAPSHOTURL=$NEXUS_SNAPSHOTURL \
-                -e NEXUS_RELEASEURL=$NEXUS_RELEASEURL \
-                -e NEXUS_CREDENTIALS_USR=$NEXUS_CREDENTIALS_USR \
-                -e NEXUS_CREDENTIALS_PSW=$NEXUS_CREDENTIALS_PSW \
-                -e MAVEN_CUSTOM_CREDENTIALS_USR=$MAVEN_CUSTOM_CREDENTIALS_USR \
-                -e MAVEN_CUSTOM_CREDENTIALS_PSW=$MAVEN_CUSTOM_CREDENTIALS_PSW \
-                -e MAVEN_CUSTOM_SNAPSHOTURL=$MAVEN_CUSTOM_SNAPSHOTURL \
-                -e MAVEN_CUSTOM_RELEASEURL=$MAVEN_CUSTOM_RELEASEURL \
-				-e MAVEN_OPTS="-Djava.net.preferIPv6Addresses=true" \
-                -e GPG_SIGNKEY=$GPG_SIGNKEY \
-                -e SONAR_TOKEN=$SONAR_TOKEN 				
-            '''
-            reuseNode true
-       }       
-    }
-    
-    options {
-        buildDiscarder(logRotator(daysToKeepStr: '3', numToKeepStr: '3'))
     }
 
     stages {
@@ -91,13 +77,25 @@ pipeline {
 
         stage('build') {
             steps {
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests clean compile"
+                sh '''
+                    setup-git.sh
+                    setup-maven-gpg.sh
+                    mvn --settings $MAVEN_SETTINGS  \
+                        -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                        -DskipTests \
+                    clean compile
+                '''                    
             }
         }
 
+      
         stage('verify') {
             steps {
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository verify"
+                sh '''
+                    mvn --settings $MAVEN_SETTINGS  \
+                        -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                    verify
+                '''                    
             }
 
             post {
@@ -111,27 +109,27 @@ pipeline {
                         qualityGates: [
                             [
                                 criticality: 'NOTE', 
-                                integerThreshold: 90, 
+                                integerThreshold: 98, 
                                 metric: 'INSTRUCTION', 
-                                threshold: 90.0
+                                threshold: 98.0
                             ], 
                             [
                                 criticality: 'NOTE', 
-                                integerThreshold: 90, 
+                                integerThreshold: 98, 
                                 metric: 'BRANCH', 
-                                threshold: 90.0
+                                threshold: 98.0
                             ], 
                             [
                                 criticality: 'NOTE', 
-                                integerThreshold: 90, 
+                                integerThreshold: 100, 
                                 metric: 'METHOD', 
-                                threshold: 90.0
+                                threshold: 98.0
                             ], 
                             [
                                 criticality: 'NOTE', 
-                                integerThreshold: 90, 
+                                integerThreshold: 98, 
                                 metric: 'LINE', 
-                                threshold: 90.0
+                                threshold: 98.0
                             ]
                         ] 
                     )
@@ -139,20 +137,29 @@ pipeline {
             }
         }
 
-        stage("quality gate") {
-            steps {
-                withSonarQubeEnv('default') {
-                    sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository sonar:sonar"
-                }
-              timeout(time: 1, unit: 'HOURS') {
-                waitForQualityGate abortPipeline: true, credentialsId: '${SONAR_TOKEN}'
-              }
+        stage('Perform quality check') {
+            options {
+                timeout(time: 60, unit: 'MINUTES')
             }
-          }
+            steps {
+                sh '''
+                    mvn --settings $MAVEN_SETTINGS --batch-mode \
+                        -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                        -Dsonar.qualitygate.wait=true \
+                    sonar:sonar
+                '''
+            }
+        }
 
         stage('install') {
             steps {
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests install"
+                sh '''
+                     mvn --settings $MAVEN_SETTINGS  \
+                        -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                        -DskipTests \
+                    install
+                '''
+
             }
         }
 
@@ -162,18 +169,18 @@ pipeline {
             }
 
             steps {
-                // prepare git signing
-                sh('git remote set-url origin https://$GIT_CREDENTIALS@github.com/$GIT_REPOSITORY')
-                sh('git config user.name "$GIT_COMMITTER_NAME"')
-                sh('git config user.email $GIT_COMMITTER_EMAIL')
-                sh('git config commit.gpgsign true')
-                sh('git config user.signingkey $GPG_SIGNKEY')
-                
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules --settings .jenkins/settings.xml -Dmaven.repo.local=/home/maven/.m2 --settings .jenkins/settings.xml' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true gitflow:release" 
-
-                // remove credentials
-                sh('git remote set-url origin $GIT_URL')
-            }
+                sh '''
+                    setup-git.sh            
+				    mvn --settings $MAVEN_SETTINGS -B \
+                        -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                        -Dresume=false \
+                        -DargLine='-DprocessAllModules --settings $MAVEN_SETTINGS -Dmaven.repo.local=$MAVEN_REPOSITORY' 
+                        -DskipTestProject=true 
+                        -DgpgSignTag=true 
+                        -DgpgSignCommit=true
+                    gitflow:release
+                '''
+            }                
         }
 
         stage('deploy') {   
@@ -191,12 +198,23 @@ pipeline {
                     }
 
                     if (params.DEPLOY || params.RELEASE_BUILD) {
-                        // Standard-Deploy
-                        sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests deploy -P tailoringexpert-maven"
+                        sh '''
+                            setup-maven-gpg.sh
+						    mvn --settings $MAVEN_SETTINGS \
+                                -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                                -DskipTests \
+                                deploy
+                        '''
 
                         // Optionaler Deploy in ein weiteres Repository via Profil
                         if (params.DEPLOY_TO_CUSTOM_REPOSITORY) {
-                            sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests deploy -P custom-maven"
+                            sh '''
+                                mvn --settings  $MAVEN_SETTINGS \
+                                    -Dmaven.repo.local=$MAVEN_REPOSITORY \
+                                    -DskipTests \
+                                    -P '!default,custom-maven' \
+                                deploy
+                            '''                                
                         }
                     } else {
                         sh 'exit 0'
