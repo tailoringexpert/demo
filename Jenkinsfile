@@ -34,7 +34,7 @@ pipeline {
             selectedValue: 'NONE',
             sortMode: 'NONE',
             type: 'PT_BRANCH',
-            description: 'Select target branch')
+            description: 'Select branch')
     }
 
     environment {
@@ -55,6 +55,7 @@ pipeline {
 
         SONAR_TOKEN = credentials('SONAR_SONAYTPE_TOKEN')
         SONAR_HOSTURL = "${env.SONAR_SONATYPE_HOSTURL}"
+        XDG_CONFIG_HOME = "/tmp/jgit"
         // other (external) defined env vars
         // M2_VOLUME maven      repoository volume
         // GIT_COMMITTER_NAME   name of the git committer
@@ -78,8 +79,6 @@ pipeline {
         stage('build') {
             steps {
                 sh '''
-                    setup-git.sh
-                    setup-maven-gpg.sh
                     mvn --settings $MAVEN_SETTINGS  \
                         -Dmaven.repo.local=$MAVEN_REPOSITORY \
                         -DskipTests \
@@ -137,7 +136,7 @@ pipeline {
             }
         }
 
-        stage('Perform quality check') {
+        stage('quality gate') {
             options {
                 timeout(time: 60, unit: 'MINUTES')
             }
